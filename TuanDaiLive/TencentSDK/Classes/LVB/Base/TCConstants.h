@@ -13,8 +13,8 @@
 //小直播相关配置请参考:https://www.qcloud.com/document/product/454/7999
 //************在腾讯云开通各项服务后，将您的配置替换到如下的几个定义中************
 //腾讯云云通信服务AppId
-#define kTCIMSDKAppId                        @"1400030873"
-#define kTCIMSDKAccountType                  @"12736"
+#define kTCIMSDKAppId                        @"1400029547"
+#define kTCIMSDKAccountType                  @"12284"
 
 //腾讯云对象和存储服务(COS)AppId
 #define kTCCOSAppId                          @""
@@ -22,18 +22,18 @@
 #define kTCCOSBucket                         @""
 //COS服务配置的机房区域，从COS的管理控制台https://console.qcloud.com/cos4/bucket进入Bucket列表后，选择您所创建的Bucket->基础配置->所属地区，查到所属地区后，根据如下
 //对应关系填入，如是“华南”请填写"gz"，“华北”请填写"tj"，“华东”请填写"sh"
-#define kTCCOSRegion                         @"sh"
+#define kTCCOSRegion                         @"gz"
 
 //云API服务密钥，在https://console.qcloud.com/capi查看，用于UGC短视频上传并落地到点播系统。
 #define kTCCloudAPISecretId                  @""
-//Http配置
+//Http配置  http://云主机外网IP或者域名／interface.php
 #define kHttpServerAddr                      @""
 
 //bugly组件Appid，bugly为腾讯提供的用于App Crash收集和分析的组件
 #define BUGLY_APP_ID                         @""
 
 //录屏需要用到此配置,请改成您的工程配置文件中的app groups的配置
-#define APP_GROUP                            @"group.com.tencent.fx.rtmpdemo"
+#define APP_GROUP                            @"group.com.lihaiyan.tdliver"
 
 //直播分享页面的跳转地址，分享到微信、手Q后点击观看将会跳转到这个地址，请参考https://www.qcloud.com/document/product/454/8046 文档部署html5的代码后，替换成相应的页面地址
 #define kLivePlayShareAddr                   @""

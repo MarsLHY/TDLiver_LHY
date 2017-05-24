@@ -21,6 +21,10 @@
 #import "TXRTMPSDK/TXLivePlayer.h"
 #import "TCConstants.h"
 #import "NSString+Common.h"
+#import "TDRequestModel.h"
+#import "TDNetworkManager.h"
+#import "MD5And3DES.h"
+
 
 #if POD_PITU
 #import "MCCameraDynamicView.h"
@@ -115,66 +119,72 @@
     _txLivePublisher = [[TXLivePush alloc] initWithConfig:_txLivePushonfig];
     
     // 创建群组
-    TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile];
-    _liveInfo.userinfo.headpic = profile.faceURL;
-    _liveInfo.userinfo.nickname = profile.nickName;
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userInfoDic = [ud objectForKey:@"userInfo"];
+//    TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile];
+    _liveInfo.userinfo.headpic = [userInfoDic objectForKey:@"head"];
+    _liveInfo.userinfo.nickname = [userInfoDic objectForKey:@"nickname"];
     
     __weak typeof(self) weakSelf = self;
     _msgHandler = [[AVIMMsgHandler alloc] init];
-    [_msgHandler createLiveRoom:^(int errCode, NSString *groupId) {
-        if (errCode == 0)
-        {
-            _liveInfo.groupid = groupId;
-            [[TCPusherMgr sharedInstance] getPusherUrl:profile.identifier
-                                                groupId:groupId
-                                                title:_liveInfo.title
-                                                coverPic:profile.coverURL
-                                                nickName:profile.nickName
-                                                headPic:profile.faceURL
-                                                location:_liveInfo.userinfo.location
-                                                handler:^(int errCode, NSString *pusherUrl, NSInteger timestamp) {
-                                                    if (0 == errCode)
-                                                    {
-                                                        _liveInfo.playurl = pusherUrl;
-
-                                                        TCPublishInfo *info = [[TCPublishInfo alloc] init];
-                                                        info.liveInfo = _liveInfo;
-                                                        info.msgHandler  =  _msgHandler;
-                                                        [_logicView setPublishInfo:info];
-                                                        
-                                                        //状态初始化
-                                                        _camera_switch = NO;
-                                                        _beauty_level = 9;
-                                                        _whitening_level = 3;
-                                                        [_txLivePublisher setBeautyFilterDepth:_beauty_level setWhiteningFilterDepth:_whitening_level];
-                                                        _torch_switch= NO;
-                                                        _log_switch = NO;
-                                                        
-                                                        //启动rtmp
-                                                        _rtmpUrl =  _liveInfo.playurl;
-                                                        _liveInfo.timestamp = timestamp;
-                                                        if (_platformType >= 0) {
-                                                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                [weakSelf shareDataWithPlatform:_platformType];
-                                                            });
-                                                            
-                                                        } else {
-                                                            [weakSelf startRtmp];
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        [_logicView closeVCWithError:[NSString stringWithFormat:@"%@%d", kErrorMsgGetPushUrlFailed, errCode] Alert:YES Result:NO];
-                                                    }
-                                                    
-                                                }];
-        }
-        else
-        {
-            [_logicView closeVCWithError:[NSString stringWithFormat:@"%@%d",kErrorMsgCreateGroupFailed, errCode]  Alert:YES Result:NO];
+    
+    _liveInfo.groupid = [NSString stringWithFormat:@"%@",[userInfoDic objectForKey:@"user_id"]];
+    //申请加入群组
+    NSLog(@"%@",_liveInfo.groupid);
+    [_msgHandler joinLiveRoom:_liveInfo.groupid handler:^(int errCode) {
+        NSLog(@"%d",errCode);
+        if (errCode==0) {
+            //获取推流url
+            //参数配置
+            TDRequestModel *starPushModel = [[TDRequestModel alloc] init];
+            starPushModel.methodName = push_starPush;
+            //获取时间戳
+            NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+            NSTimeInterval timer=[dat timeIntervalSince1970];
+            NSString*timeString = [NSString stringWithFormat:@"%0.f", timer];
+            //token
+            NSString *token = [NSString stringWithFormat:@"appid=%@&appkey=%@&timestamp=%@",TDAppid,TDAppkey,timeString];
+            token = [MD5And3DES md5:token];
+            starPushModel.param = @{@"appid":TDAppid,
+                                    @"timestamp":timeString,
+                                    @"token":token,
+                                    @"room_id":[userInfoDic objectForKey:@"user_id"]
+                                    };
+            starPushModel.requestType = TDTuandaiSourceType;
+            //发送请求
+            [[TDNetworkManager sharedInstane] postRequestWithRequestModel:starPushModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
+                if (responeModel.code==1) {
+                    _liveInfo.playurl = responeModel.responeData[@"push_url"];
+                    
+                    TCPublishInfo *info = [[TCPublishInfo alloc] init];
+                    info.liveInfo = _liveInfo;
+                    info.msgHandler  =  _msgHandler;
+                    [_logicView setPublishInfo:info];
+                    
+                    //状态初始化
+                    _camera_switch = NO;
+                    _beauty_level = 9;
+                    _whitening_level = 3;
+                    [_txLivePublisher setBeautyFilterDepth:_beauty_level setWhiteningFilterDepth:_whitening_level];
+                    _torch_switch= NO;
+                    _log_switch = NO;
+                    
+                    //启动rtmp
+                    _rtmpUrl =  _liveInfo.playurl;
+                    //获取时间戳
+                    _liveInfo.timestamp = [timeString intValue];
+                    if (_platformType >= 0) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [weakSelf shareDataWithPlatform:_platformType];
+                        });
+                        
+                    } else {
+                        [weakSelf startRtmp];
+                    }
+                }
+            }];
         }
     }];
-    
     
 #if POD_PITU
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(packageDownloadProgress:) name:kMC_NOTI_ONLINEMANAGER_PACKAGE_PROGRESS object:nil];
@@ -392,17 +402,44 @@
     }
 }
 
+//停止推流
 - (void)stopRtmp {
-    if(_txLivePublisher != nil)
-    {
-        _txLivePublisher.delegate = nil;
-        [_txLivePublisher stopPreview];
-        _isPreviewing = NO;
-        [_txLivePublisher stopPush];
-        _txLivePublisher.config.pauseImg = nil;
-        _txLivePublisher = nil;
-    }
-    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userInfoDic = [ud objectForKey:@"userInfo"];
+    //参数配置
+    TDRequestModel *endPushModel = [[TDRequestModel alloc] init];
+    endPushModel.methodName = push_endPush;
+    //获取时间戳
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval timer=[dat timeIntervalSince1970];
+    NSString*timeString = [NSString stringWithFormat:@"%0.f", timer];
+    //token
+    NSString *token = [NSString stringWithFormat:@"appid=%@&appkey=%@&timestamp=%@",TDAppid,TDAppkey,timeString];
+    token = [MD5And3DES md5:token];
+    endPushModel.param = @{@"appid":TDAppid,
+                            @"timestamp":timeString,
+                            @"token":token,
+                            @"room_id":[userInfoDic objectForKey:@"user_id"]
+                            };
+    endPushModel.requestType = TDTuandaiSourceType;
+    //发起请求
+    [[TDNetworkManager sharedInstane] postRequestWithRequestModel:endPushModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
+        if (responeModel.code == 1) {
+            if(_txLivePublisher != nil)
+            {
+                _txLivePublisher.delegate = nil;
+                [_txLivePublisher stopPreview];
+                _isPreviewing = NO;
+                [_txLivePublisher stopPush];
+                _txLivePublisher.config.pauseImg = nil;
+                _txLivePublisher = nil;
+            }
+            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+        }else{
+            [SVProgressHUD showErrorWithStatus:@"退出房间失败"];
+        }
+    }];
+    
 }
 
 // RTMP 推流事件通知
@@ -502,12 +539,13 @@
 -(void)closeRTMP {
     [self stopRtmp];
     
-    if (_msgHandler)
-    {
-        [_msgHandler deleteLiveRoom:_liveInfo.groupid handler:^(int errCode) {
-            
-        }];
-    }
+//    if (_msgHandler)
+//    {
+//        //解散群租
+//        [_msgHandler deleteLiveRoom:_liveInfo.groupid handler:^(int errCode) {
+//            
+//        }];
+//    }
     
     [[TCPusherMgr sharedInstance] changeLiveStatus:_liveInfo.userid status:TCLiveStatus_Offline handler:^(int errCode) {
         
@@ -614,7 +652,6 @@
         toastView = nil;
     });
 }
-
 
 -(void) clickLog:(UIButton*) btn
 {
@@ -804,7 +841,6 @@
     /* 以下分享类型，开发者可根据需求调用 */
     // 1、纯文本分享
     messageObject.text = @"开播啦，小伙伴火速围观～～～";
-    
     
     
     // 2、 图片或图文分享

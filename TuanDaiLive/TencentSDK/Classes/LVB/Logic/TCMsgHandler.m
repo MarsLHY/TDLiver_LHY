@@ -206,6 +206,10 @@
 - (void)switchToLiveRoom:(NSString *)groupId
 {
     _groupId = groupId;
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dic = [ud objectForKey:@"userInfo"];
+    NSLog(@"%@",[dic objectForKey:@"user_id"]);
+    _groupId = [dic objectForKey:@"user_id"];
     _chatRoomConversation = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:groupId];
 }
 

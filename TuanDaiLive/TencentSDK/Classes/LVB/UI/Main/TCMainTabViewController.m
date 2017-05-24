@@ -114,7 +114,8 @@ typedef enum : NSUInteger {
 }
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
-    if (viewController == [tabBarController.viewControllers objectAtIndex:0] || viewController == [tabBarController.viewControllers objectAtIndex:2] ) {
+    //|| viewController == [tabBarController.viewControllers objectAtIndex:2]
+    if (viewController == [tabBarController.viewControllers objectAtIndex:0]) {
         return NO;
     }
     return YES;

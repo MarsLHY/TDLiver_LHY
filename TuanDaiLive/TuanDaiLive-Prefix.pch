@@ -21,6 +21,9 @@
 #import "MJExtension.h"
 #import "SVProgressHUD.h"
 
+//接口
+#import "TDRequestMethod.h"
+
 //腾讯
 #import "ColorHeaders.h"
 #import "CommonMacro.h"

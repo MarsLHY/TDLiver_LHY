@@ -56,6 +56,8 @@
     manager.requestSerializer.timeoutInterval = 10; //超时设置10秒
     manager.requestSerializer.cachePolicy = NSURLRequestReloadRevalidatingCacheData;
     
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    
     NSURLSessionDataTask *task = [manager POST:path parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         if (successedBlock) {

@@ -282,6 +282,7 @@
     _btnLog.bounds = CGRectMake(0, 0, icon_size, icon_size);
     [_btnLog setImage:[UIImage imageNamed:@"log"] forState:UIControlStateNormal];
     [_btnLog addTarget:self action:@selector(clickLog:) forControlEvents:UIControlEventTouchUpInside];
+    _btnLog.hidden = YES;
     [self addSubview:_btnLog];
     
     //退出VC

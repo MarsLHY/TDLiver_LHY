@@ -10,12 +10,8 @@
 
 
 #pragma mark - 测试服务器域名
-//P2P
-static NSString *TD110Server = @"http://10.100.11.110:9108/api";
-//定期理财
-static NSString *DQ110Server = @"http://10.100.11.110:9109/api";
-//业务运营
-static NSString *TDTestExtentServer = @"http://10.100.11.110:9120/api";
+//团贷网直播
+static NSString *TD110Server = @"http://10.103.8.188:1022/v1";
 
 #pragma mark - 19环境服务器域名
 
@@ -97,19 +93,10 @@ static NSString *TDTestExtentServer = @"http://10.100.11.110:9120/api";
     
     NSString *host = @"";
    
-    //1.p2p
+    //1.团贷网直播
     if (requestSourceType == TDTuandaiSourceType) {
         
         host = TD110Server;
-    }
-    //2.定期理财
-    else if (requestSourceType == TDRegularFinancialSourceType) {
-        
-        host = DQ110Server;
-    }
-    //3.业务运营
-    else if (requestSourceType == TDOperationSourceType){
-        host = TDTestExtentServer;
     }
     
     return host;

@@ -14,7 +14,7 @@
 #import "TCLoginParam.h"
 #import "TCTLSLoginViewController.h"
 #import "TCTLSRegisterViewController.h"
-
+#import "TLSUserInfo+TDAdd.h"
 
 @interface TCLoginViewController ()
 {
@@ -85,7 +85,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if (userInfo) {
             _loginParam.identifier = userInfo.identifier;
-            _loginParam.userSig = [[TLSHelper getInstance] getTLSUserSig:userInfo.identifier];
+            _loginParam.userSig = userInfo.userSig;
             _loginParam.tokenTime = [[NSDate date] timeIntervalSince1970];
             
             [self loginIMSDK];
@@ -97,6 +97,7 @@
     __weak TCLoginViewController *weakSelf = self;
     
     [[TCIMPlatform sharedInstance] login:_loginParam succ:^{
+        [SVProgressHUD dismiss];
         // 持久化param
         [_loginParam saveToLocal];
         // 进入主界面
@@ -110,6 +111,7 @@
 #pragma mark - delegate<TLSUILoginListener>
 
 - (void)TLSUILoginOK:(TLSUserInfo *)userinfo {
+    [SVProgressHUD showWithStatus:@"登录中..."];
     [self loginWith:userinfo];
 }
 

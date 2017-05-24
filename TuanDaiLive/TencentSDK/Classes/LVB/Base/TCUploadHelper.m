@@ -65,7 +65,6 @@ static TCUploadHelper *_shareInstance = nil;
         if (succ)
         {
             //获取sign
-            
             [self getCOSSign:^(int errCode, NSString *strSign) {
                 if (0 == errCode)
                 {

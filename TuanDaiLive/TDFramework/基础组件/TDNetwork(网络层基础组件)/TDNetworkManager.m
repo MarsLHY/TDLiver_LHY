@@ -55,14 +55,13 @@
     NSURLSessionDataTask *postTask = [self postRequestWithPath:domainPath parameter:dict whenSuccessed:^(id json) {
         if (callBack) {
             TDResponeModel *responeModel = [[TDResponeModel alloc] init];
-            responeModel.code = [json td_IntegerForKey:@"ReturnCode"];
+            responeModel.code = [json td_IntegerForKey:@"ResultCode"];
             responeModel.responeData = [json td_ObjectForKey:@"Data"];
-            responeModel.message = [json td_StringForKey:@"ReturnMessage"];
+            responeModel.message = [json td_StringForKey:@"ResultMsg"];
             
             if (responeModel.code != 1) {
                 responeModel.errorType = ServerErrorType;
             }
-
             callBack(responeModel);
         }
         
@@ -104,11 +103,12 @@
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.requestSerializer.timeoutInterval = 10; //超时设置10秒
     manager.requestSerializer.cachePolicy = NSURLRequestReloadRevalidatingCacheData;
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
     
     NSURLSessionDataTask *task = [manager POST:path parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         if (successedBlock) {
-            
+        
             successedBlock(responseObject);
         }
         

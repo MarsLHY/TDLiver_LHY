@@ -9,6 +9,16 @@
 #ifndef TDConfigurationMacros_h
 #define TDConfigurationMacros_h
 
+//系统配置appid与appkey 用于接口参数
+#define TDAppid @"tuandai_ios"
+#define TDAppkey @"Q&iGMFmekT%Zn&q*"
+
+//密钥 3DES
+#define _3DES_KEY @"i^FgWOB8IsN47zja^^&eSBup"
+//偏移量
+#define gIv             @"lhy"
+
+
 //是否开启TDLog ，如果不开启，直接注释掉就可以了
 #define Is_Strat_Log
 

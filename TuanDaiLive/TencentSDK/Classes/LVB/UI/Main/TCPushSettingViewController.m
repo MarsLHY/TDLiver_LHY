@@ -74,7 +74,10 @@ BOOL g_bNeedEnterPushSettingView = NO;
     self.titleTextView.delegate = self;
     
     TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile];
-    [self.coverImageView sd_setImageWithURL:[NSURL URLWithString:[TCUtil transImageURL2HttpsURL:profile.coverURL]] placeholderImage:[UIImage imageNamed:@"defaul_publishcover"]];
+    //从缓存拿用户图像
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userInfo = [ud objectForKey:@"userInfo"];
+    [self.coverImageView sd_setImageWithURL:[NSURL URLWithString:[userInfo objectForKey:@"head"]] placeholderImage:[UIImage imageNamed:@"cover_background"]];
     
     [self showYTAuthAlertDlg];
 }
@@ -481,7 +484,9 @@ BOOL g_bNeedEnterPushSettingView = NO;
 #pragma mark - 上传图片
 - (void)uploadImage {
     
-    TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile ];
+    
+    TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile];
+    
     if (self.selectedCoverImage) {
         [[TCUploadHelper shareInstance] upload:profile.identifier image:self.selectedCoverImage completion:^(int errCode, NSString *imageSaveUrl) {
             if (errCode != 0) {
@@ -500,6 +505,7 @@ BOOL g_bNeedEnterPushSettingView = NO;
     } else {
         [[HUDHelper sharedInstance] tipMessage:@"请选择图片"];
     }
+    
 }
 
 #pragma 启动推流界面

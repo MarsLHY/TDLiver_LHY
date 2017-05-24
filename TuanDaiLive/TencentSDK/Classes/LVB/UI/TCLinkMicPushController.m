@@ -24,7 +24,7 @@
     NSMutableArray*         _playItems;
     NSMutableSet*           _setLinkMemeber;
     TCLinkMicMgr*           _tcLinkMicMgr;
-
+    
     BOOL                    _isSupprotHardware;
 }
 @end
