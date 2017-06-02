@@ -240,15 +240,16 @@
     _btnChat = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnChat.center = CGPointMake(first_icon_center_x, icon_center_y);
     _btnChat.bounds = CGRectMake(0, 0, icon_size, icon_size);
-    [_btnChat setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
+    [_btnChat setImage:[UIImage imageNamed:@"message"] forState:UIControlStateNormal];
     [_btnChat addTarget:self action:@selector(clickChat:) forControlEvents:UIControlEventTouchUpInside];
+    _btnChat.hidden = YES;
     [self addSubview:_btnChat];
     
     //开启闪关灯按钮
     _btnTorch = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnTorch.center = CGPointMake(first_icon_center_x + icon_center_interval, icon_center_y);
     _btnTorch.bounds = CGRectMake(0, 0, icon_size, icon_size);
-    [_btnTorch setImage:[UIImage imageNamed:@"flash"] forState:UIControlStateNormal];
+    [_btnTorch setImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
     [_btnTorch addTarget:self action:@selector(clickTorch:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_btnTorch];
     
@@ -272,7 +273,7 @@
     _btnMusic = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnMusic.center = CGPointMake(first_icon_center_x + icon_center_interval*4, icon_center_y);
     _btnMusic.bounds = CGRectMake(0, 0, icon_size, icon_size);
-    [_btnMusic setImage:[UIImage imageNamed:@"music_icon"] forState:UIControlStateNormal];
+    [_btnMusic setImage:[UIImage imageNamed:@"music"] forState:UIControlStateNormal];
     [_btnMusic addTarget:self action:@selector(clickMusic:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_btnMusic];
     

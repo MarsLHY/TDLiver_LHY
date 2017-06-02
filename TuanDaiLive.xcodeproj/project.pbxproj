@@ -23,6 +23,16 @@
 		25661A0B1EC5B93A00F4C1DB /* TDDomainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25661A0A1EC5B93A00F4C1DB /* TDDomainManager.m */; };
 		730D06851ED3D2F300895E30 /* TLSUserInfo+TDAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 730D06841ED3D2F300895E30 /* TLSUserInfo+TDAdd.m */; };
 		73167AD11ECABDD8002F563D /* NSDictionary+TDAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 73167AD01ECABDD8002F563D /* NSDictionary+TDAdd.m */; };
+		73251EE91ED66EB2002DDF0F /* u31.png in Resources */ = {isa = PBXBuildFile; fileRef = 73251EE81ED66EB2002DDF0F /* u31.png */; };
+		73450A331EDFA0AC00D15481 /* TDAnchorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A321EDFA0AC00D15481 /* TDAnchorViewController.m */; };
+		73450A361EDFA44F00D15481 /* TDAnchorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A351EDFA44F00D15481 /* TDAnchorView.m */; };
+		73450A3A1EE0016900D15481 /* chatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A391EE0016900D15481 /* chatCell.m */; };
+		73450A3D1EE009BC00D15481 /* TDGiveGoodView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A3C1EE009BC00D15481 /* TDGiveGoodView.m */; };
+		73450A401EE00DEE00D15481 /* TDChatToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A3F1EE00DEE00D15481 /* TDChatToolView.m */; };
+		73450A431EE00EFB00D15481 /* TDBeautyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A421EE00EFB00D15481 /* TDBeautyView.m */; };
+		73450A461EE0152A00D15481 /* XTLoveHeartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A451EE0152A00D15481 /* XTLoveHeartView.m */; };
+		734C2DA51EE0F90A0095FC5F /* TDAnchorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73450A351EDFA44F00D15481 /* TDAnchorView.m */; };
+		734C2DA71EE103240095FC5F /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = 734C2DA61EE103240095FC5F /* message.png */; };
 		735DEF361ECE9172005256F1 /* TCBaseAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 735DED451ECE9172005256F1 /* TCBaseAppDelegate.m */; };
 		735DEF371ECE9172005256F1 /* NSData+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 735DED491ECE9172005256F1 /* NSData+Common.m */; };
 		735DEF381ECE9172005256F1 /* NSObject+CommonBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 735DED4B1ECE9172005256F1 /* NSObject+CommonBlock.m */; };
@@ -440,7 +450,24 @@
 		73167ACF1ECABDD8002F563D /* NSDictionary+TDAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+TDAdd.h"; sourceTree = "<group>"; };
 		73167AD01ECABDD8002F563D /* NSDictionary+TDAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+TDAdd.m"; sourceTree = "<group>"; };
 		73167AD21ECABE71002F563D /* TDFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDFoundation.h; sourceTree = "<group>"; };
+		73251EE81ED66EB2002DDF0F /* u31.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u31.png; sourceTree = "<group>"; };
+		73450A311EDFA0AC00D15481 /* TDAnchorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAnchorViewController.h; sourceTree = "<group>"; };
+		73450A321EDFA0AC00D15481 /* TDAnchorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAnchorViewController.m; sourceTree = "<group>"; };
+		73450A341EDFA44F00D15481 /* TDAnchorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDAnchorView.h; sourceTree = "<group>"; };
+		73450A351EDFA44F00D15481 /* TDAnchorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDAnchorView.m; sourceTree = "<group>"; };
+		73450A371EDFAA9B00D15481 /* TDHelperMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDHelperMacros.h; sourceTree = "<group>"; };
+		73450A381EE0016900D15481 /* chatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chatCell.h; sourceTree = "<group>"; };
+		73450A391EE0016900D15481 /* chatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chatCell.m; sourceTree = "<group>"; };
+		73450A3B1EE009BC00D15481 /* TDGiveGoodView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDGiveGoodView.h; sourceTree = "<group>"; };
+		73450A3C1EE009BC00D15481 /* TDGiveGoodView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDGiveGoodView.m; sourceTree = "<group>"; };
+		73450A3E1EE00DEE00D15481 /* TDChatToolView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDChatToolView.h; sourceTree = "<group>"; };
+		73450A3F1EE00DEE00D15481 /* TDChatToolView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDChatToolView.m; sourceTree = "<group>"; };
+		73450A411EE00EFB00D15481 /* TDBeautyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDBeautyView.h; sourceTree = "<group>"; };
+		73450A421EE00EFB00D15481 /* TDBeautyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDBeautyView.m; sourceTree = "<group>"; };
+		73450A441EE0152A00D15481 /* XTLoveHeartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XTLoveHeartView.h; sourceTree = "<group>"; };
+		73450A451EE0152A00D15481 /* XTLoveHeartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XTLoveHeartView.m; sourceTree = "<group>"; };
 		7349FE8A1ED2CAFA00712B68 /* TDRequestMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDRequestMethod.h; sourceTree = "<group>"; };
+		734C2DA61EE103240095FC5F /* message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message.png; sourceTree = "<group>"; };
 		735DED441ECE9172005256F1 /* TCBaseAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCBaseAppDelegate.h; sourceTree = "<group>"; };
 		735DED451ECE9172005256F1 /* TCBaseAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCBaseAppDelegate.m; sourceTree = "<group>"; };
 		735DED481ECE9172005256F1 /* NSData+Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Common.h"; sourceTree = "<group>"; };
@@ -963,6 +990,7 @@
 				735DF0E91ECE996F005256F1 /* TDClasses */,
 				256617EB1EC5436800F4C1DB /* ViewController.h */,
 				256617EC1EC5436800F4C1DB /* ViewController.m */,
+				73251EE81ED66EB2002DDF0F /* u31.png */,
 				256617EE1EC5436800F4C1DB /* Main.storyboard */,
 				256617F11EC5436800F4C1DB /* Assets.xcassets */,
 				256617F31EC5436800F4C1DB /* LaunchScreen.storyboard */,
@@ -1002,7 +1030,6 @@
 		256618A61EC558C800F4C1DB /* TDFramework */ = {
 			isa = PBXGroup;
 			children = (
-				73167AB51ECABD41002F563D /* Component(自定义控件) */,
 				256619121EC558C800F4C1DB /* 基础组件 */,
 				73167ACC1ECABDD8002F563D /* Utils(工具类) */,
 			);
@@ -1013,8 +1040,6 @@
 			isa = PBXGroup;
 			children = (
 				256619131EC558C800F4C1DB /* TDNetwork(网络层基础组件) */,
-				256619141EC558C800F4C1DB /* TDRefresh(上下拉刷新组件) */,
-				256619171EC558C800F4C1DB /* TDShareSDK(分享组件) */,
 			);
 			path = "基础组件";
 			sourceTree = "<group>";
@@ -1040,36 +1065,6 @@
 			path = "TDNetwork(网络层基础组件)";
 			sourceTree = "<group>";
 		};
-		256619141EC558C800F4C1DB /* TDRefresh(上下拉刷新组件) */ = {
-			isa = PBXGroup;
-			children = (
-				256619151EC558C800F4C1DB /* Base */,
-				256619161EC558C800F4C1DB /* Custom */,
-			);
-			path = "TDRefresh(上下拉刷新组件)";
-			sourceTree = "<group>";
-		};
-		256619151EC558C800F4C1DB /* Base */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Base;
-			sourceTree = "<group>";
-		};
-		256619161EC558C800F4C1DB /* Custom */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Custom;
-			sourceTree = "<group>";
-		};
-		256619171EC558C800F4C1DB /* TDShareSDK(分享组件) */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDShareSDK(分享组件)";
-			sourceTree = "<group>";
-		};
 		491E65C2239DF5AEB7DB6D8E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1085,189 +1080,6 @@
 				9C3AFE3B6261E853AE9A7741 /* libPods-defaults-TuanDaiLive.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		73167AB51ECABD41002F563D /* Component(自定义控件) */ = {
-			isa = PBXGroup;
-			children = (
-				73167AB61ECABD41002F563D /* TDAlertViewController (基础弹窗框) */,
-				73167AB81ECABD41002F563D /* TDAlertView（弹出框） */,
-				73167AB91ECABD41002F563D /* TDBillScreenView(账单筛选控件) */,
-				73167ABA1ECABD41002F563D /* TDCallCustomerServiceView */,
-				73167ABB1ECABD41002F563D /* TDContractListView(合同查看列表控件) */,
-				73167ABC1ECABD41002F563D /* TDCountDownButton（验证码倒计时控件） */,
-				73167ABD1ECABD41002F563D /* TDCycleScrollView */,
-				73167ABE1ECABD41002F563D /* TDEmotionMap(情感图) */,
-				73167ABF1ECABD41002F563D /* TDInfoIntroductionView(信息介绍) */,
-				73167AC01ECABD41002F563D /* TDInvestPassWordView(投资密码弹窗) */,
-				73167AC11ECABD41002F563D /* TDInvestScreenView（投资筛选控件） */,
-				73167AC21ECABD41002F563D /* TDItemSelectView */,
-				73167AC31ECABD41002F563D /* TDMarqueeLabel */,
-				73167AC41ECABD41002F563D /* TDNoDataView */,
-				73167AC51ECABD41002F563D /* TDPageView */,
-				73167AC61ECABD41002F563D /* TDProgressHud */,
-				73167AC71ECABD41002F563D /* TDRefreshControl */,
-				73167AC81ECABD41002F563D /* TDResultViewController（结果显示控制器） */,
-				73167AC91ECABD41002F563D /* TDRImageButtonView */,
-				73167ACA1ECABD41002F563D /* TDSegmentControl(分段选择控件) */,
-				73167ACB1ECABD41002F563D /* TDTabBarController */,
-			);
-			path = "Component(自定义控件)";
-			sourceTree = "<group>";
-		};
-		73167AB61ECABD41002F563D /* TDAlertViewController (基础弹窗框) */ = {
-			isa = PBXGroup;
-			children = (
-				73167AB71ECABD41002F563D /* TDAlertAnimation+Category */,
-			);
-			path = "TDAlertViewController (基础弹窗框)";
-			sourceTree = "<group>";
-		};
-		73167AB71ECABD41002F563D /* TDAlertAnimation+Category */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDAlertAnimation+Category";
-			sourceTree = "<group>";
-		};
-		73167AB81ECABD41002F563D /* TDAlertView（弹出框） */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDAlertView（弹出框）";
-			sourceTree = "<group>";
-		};
-		73167AB91ECABD41002F563D /* TDBillScreenView(账单筛选控件) */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDBillScreenView(账单筛选控件)";
-			sourceTree = "<group>";
-		};
-		73167ABA1ECABD41002F563D /* TDCallCustomerServiceView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDCallCustomerServiceView;
-			sourceTree = "<group>";
-		};
-		73167ABB1ECABD41002F563D /* TDContractListView(合同查看列表控件) */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDContractListView(合同查看列表控件)";
-			sourceTree = "<group>";
-		};
-		73167ABC1ECABD41002F563D /* TDCountDownButton（验证码倒计时控件） */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDCountDownButton（验证码倒计时控件）";
-			sourceTree = "<group>";
-		};
-		73167ABD1ECABD41002F563D /* TDCycleScrollView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDCycleScrollView;
-			sourceTree = "<group>";
-		};
-		73167ABE1ECABD41002F563D /* TDEmotionMap(情感图) */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDEmotionMap(情感图)";
-			sourceTree = "<group>";
-		};
-		73167ABF1ECABD41002F563D /* TDInfoIntroductionView(信息介绍) */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDInfoIntroductionView(信息介绍)";
-			sourceTree = "<group>";
-		};
-		73167AC01ECABD41002F563D /* TDInvestPassWordView(投资密码弹窗) */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDInvestPassWordView(投资密码弹窗)";
-			sourceTree = "<group>";
-		};
-		73167AC11ECABD41002F563D /* TDInvestScreenView（投资筛选控件） */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDInvestScreenView（投资筛选控件）";
-			sourceTree = "<group>";
-		};
-		73167AC21ECABD41002F563D /* TDItemSelectView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDItemSelectView;
-			sourceTree = "<group>";
-		};
-		73167AC31ECABD41002F563D /* TDMarqueeLabel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDMarqueeLabel;
-			sourceTree = "<group>";
-		};
-		73167AC41ECABD41002F563D /* TDNoDataView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDNoDataView;
-			sourceTree = "<group>";
-		};
-		73167AC51ECABD41002F563D /* TDPageView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDPageView;
-			sourceTree = "<group>";
-		};
-		73167AC61ECABD41002F563D /* TDProgressHud */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDProgressHud;
-			sourceTree = "<group>";
-		};
-		73167AC71ECABD41002F563D /* TDRefreshControl */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDRefreshControl;
-			sourceTree = "<group>";
-		};
-		73167AC81ECABD41002F563D /* TDResultViewController（结果显示控制器） */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDResultViewController（结果显示控制器）";
-			sourceTree = "<group>";
-		};
-		73167AC91ECABD41002F563D /* TDRImageButtonView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDRImageButtonView;
-			sourceTree = "<group>";
-		};
-		73167ACA1ECABD41002F563D /* TDSegmentControl(分段选择控件) */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "TDSegmentControl(分段选择控件)";
-			sourceTree = "<group>";
-		};
-		73167ACB1ECABD41002F563D /* TDTabBarController */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TDTabBarController;
 			sourceTree = "<group>";
 		};
 		73167ACC1ECABDD8002F563D /* Utils(工具类) */ = {
@@ -1297,6 +1109,51 @@
 				73167AD01ECABDD8002F563D /* NSDictionary+TDAdd.m */,
 			);
 			path = Foundation;
+			sourceTree = "<group>";
+		};
+		73450A2A1EDF9EEE00D15481 /* Anchor(主播) */ = {
+			isa = PBXGroup;
+			children = (
+				73450A2B1EDF9EEE00D15481 /* Model */,
+				73450A2C1EDF9EEE00D15481 /* View */,
+				73450A2D1EDF9EEE00D15481 /* ViewController */,
+			);
+			path = "Anchor(主播)";
+			sourceTree = "<group>";
+		};
+		73450A2B1EDF9EEE00D15481 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		73450A2C1EDF9EEE00D15481 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				73450A341EDFA44F00D15481 /* TDAnchorView.h */,
+				73450A351EDFA44F00D15481 /* TDAnchorView.m */,
+				73450A381EE0016900D15481 /* chatCell.h */,
+				73450A391EE0016900D15481 /* chatCell.m */,
+				73450A3B1EE009BC00D15481 /* TDGiveGoodView.h */,
+				73450A3C1EE009BC00D15481 /* TDGiveGoodView.m */,
+				73450A441EE0152A00D15481 /* XTLoveHeartView.h */,
+				73450A451EE0152A00D15481 /* XTLoveHeartView.m */,
+				73450A3E1EE00DEE00D15481 /* TDChatToolView.h */,
+				73450A3F1EE00DEE00D15481 /* TDChatToolView.m */,
+				73450A411EE00EFB00D15481 /* TDBeautyView.h */,
+				73450A421EE00EFB00D15481 /* TDBeautyView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		73450A2D1EDF9EEE00D15481 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				73450A311EDFA0AC00D15481 /* TDAnchorViewController.h */,
+				73450A321EDFA0AC00D15481 /* TDAnchorViewController.m */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		735DED421ECE9172005256F1 /* Classes */ = {
@@ -1601,6 +1458,7 @@
 		735DEDF11ECE9172005256F1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				734C2DA61EE103240095FC5F /* message.png */,
 				735DEDF21ECE9172005256F1 /* 0orginal@2x.png */,
 				735DEDF31ECE9172005256F1 /* 1shengdai@2x.png */,
 				735DEDF41ECE9172005256F1 /* 2gei_5.mp4 */,
@@ -1898,6 +1756,7 @@
 				735DF0EE1ECE996F005256F1 /* Base（基类） */,
 				735DF0F11ECE996F005256F1 /* Define（自定义） */,
 				73E423141ED41751003A9A68 /* Login(登录) */,
+				73450A2A1EDF9EEE00D15481 /* Anchor(主播) */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1952,6 +1811,7 @@
 				735DF0F41ECE996F005256F1 /* TDPublicMethordMacros.h */,
 				735DF0F51ECE996F005256F1 /* TDThridPartSDKKeyMacros.h */,
 				735DF0F61ECE996F005256F1 /* TDTreasureMacro.h */,
+				73450A371EDFAA9B00D15481 /* TDHelperMacros.h */,
 			);
 			path = "Macro（宏）";
 			sourceTree = "<group>";
@@ -2252,6 +2112,7 @@
 				735DF0A31ECE9173005256F1 /* vod.png in Resources */,
 				735DF0A81ECE9173005256F1 /* white.png in Resources */,
 				735DF0541ECE9173005256F1 /* startrecord_press.png in Resources */,
+				73251EE91ED66EB2002DDF0F /* u31.png in Resources */,
 				735DEFE11ECE9173005256F1 /* kickout.png in Resources */,
 				735DEFF81ECE9173005256F1 /* living.png in Resources */,
 				735DEF5F1ECE9172005256F1 /* TCPushSettingViewController.xib in Resources */,
@@ -2282,6 +2143,7 @@
 				735DF0301ECE9173005256F1 /* play_ugc_edit@2x.png in Resources */,
 				735DF0871ECE9173005256F1 /* video_record_QQ@2x.png in Resources */,
 				735DEFD61ECE9173005256F1 /* Icon-60.png in Resources */,
+				734C2DA71EE103240095FC5F /* message.png in Resources */,
 				735DEFAB1ECE9172005256F1 /* composite_press@2x.png in Resources */,
 				735DEF571ECE9172005256F1 /* TXVideoLoadingController.xib in Resources */,
 				735DF0A01ECE9173005256F1 /* videoex_press@2x.png in Resources */,
@@ -2487,6 +2349,7 @@
 				735DF0FD1ECE996F005256F1 /* AppDelegate.m in Sources */,
 				735DEF771ECE9172005256F1 /* TCTLSCommon.m in Sources */,
 				735DEF6D1ECE9172005256F1 /* TCPlayController.m in Sources */,
+				73450A431EE00EFB00D15481 /* TDBeautyView.m in Sources */,
 				735DEF491ECE9172005256F1 /* TCLoginParam.m in Sources */,
 				256619FF1EC5974C00F4C1DB /* TDNetworkManager.m in Sources */,
 				735DEF691ECE9172005256F1 /* TCLinkMicPlayController.m in Sources */,
@@ -2497,6 +2360,7 @@
 				735DEF591ECE9172005256F1 /* TXVideoRangeSlider.m in Sources */,
 				735DEF741ECE9172005256F1 /* TCUserInfoController.m in Sources */,
 				735DEF761ECE9172005256F1 /* TCVideoPublishController.m in Sources */,
+				73450A361EDFA44F00D15481 /* TDAnchorView.m in Sources */,
 				735DEF3A1ECE9172005256F1 /* UIButton+Additions.m in Sources */,
 				25661A021EC5ADF300F4C1DB /* TDRequestModel.m in Sources */,
 				735DEF5A1ECE9172005256F1 /* TCLiveListCell.m in Sources */,
@@ -2511,10 +2375,12 @@
 				735DEF4C1ECE9172005256F1 /* TCPusherMgr.m in Sources */,
 				73E4230B1ED40737003A9A68 /* MD5And3DES.m in Sources */,
 				73E4230F1ED415C7003A9A68 /* TDBaseController.m in Sources */,
+				73450A3D1EE009BC00D15481 /* TDGiveGoodView.m in Sources */,
 				73167AD11ECABDD8002F563D /* NSDictionary+TDAdd.m in Sources */,
 				735DEF501ECE9172005256F1 /* TCVideoComposeCell.m in Sources */,
 				735DEF791ECE9172005256F1 /* TCTLSRegisterViewController.m in Sources */,
 				735DEF6C1ECE9172005256F1 /* TCLoginViewController.m in Sources */,
+				73450A3A1EE0016900D15481 /* chatCell.m in Sources */,
 				735DEF4D1ECE9172005256F1 /* TCStreamMergeMgr.m in Sources */,
 				73E4230A1ED40737003A9A68 /* GTMBase64.m in Sources */,
 				735DEF651ECE9172005256F1 /* TCMsgListCell.m in Sources */,
@@ -2528,9 +2394,11 @@
 				735DEF521ECE9172005256F1 /* TCVideoComposeController.m in Sources */,
 				735DEF681ECE9172005256F1 /* TCEditUserInfoController.m in Sources */,
 				735DEF441ECE9172005256F1 /* TCUtil.m in Sources */,
+				73450A401EE00DEE00D15481 /* TDChatToolView.m in Sources */,
 				735DEF631ECE9172005256F1 /* TCVideoRecordViewController.m in Sources */,
 				735DEF671ECE9172005256F1 /* TCMsgModel.m in Sources */,
 				735DEF361ECE9172005256F1 /* TCBaseAppDelegate.m in Sources */,
+				73450A461EE0152A00D15481 /* XTLoveHeartView.m in Sources */,
 				256619F91EC586DC00F4C1DB /* TDNetworkBase.m in Sources */,
 				735DEF541ECE9172005256F1 /* TCVideoEditPrevController.m in Sources */,
 				735DEF3C1ECE9172005256F1 /* UIImage+Additions.m in Sources */,
@@ -2552,6 +2420,7 @@
 				735DEF3E1ECE9172005256F1 /* UIView+CustomAutoLayout.m in Sources */,
 				735DEF5D1ECE9172005256F1 /* TCNavigationController.m in Sources */,
 				735DEF471ECE9172005256F1 /* TCLiveListMgr.m in Sources */,
+				73450A331EDFA0AC00D15481 /* TDAnchorViewController.m in Sources */,
 				735DEF721ECE9172005256F1 /* TCPushDecorateView.m in Sources */,
 				735DEF5E1ECE9172005256F1 /* TCPushSettingViewController.m in Sources */,
 				256619FC1EC58AD300F4C1DB /* TDAFHTTPSessionManager.m in Sources */,
@@ -2577,6 +2446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2566180B1EC5436800F4C1DB /* TuanDaiLiveUITests.m in Sources */,
+				734C2DA51EE0F90A0095FC5F /* TDAnchorView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

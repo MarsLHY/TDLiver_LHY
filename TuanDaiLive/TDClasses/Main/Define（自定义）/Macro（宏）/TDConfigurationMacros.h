@@ -15,7 +15,7 @@
 
 //密钥 3DES
 #define _3DES_KEY @"i^FgWOB8IsN47zja^^&eSBup"
-//偏移量
+//偏移量 
 #define gIv             @"lhy"
 
 

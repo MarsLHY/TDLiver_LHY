@@ -685,11 +685,11 @@
         }
         
         if (_torch_switch == YES) {
-            [_logicView.btnTorch setImage:[UIImage imageNamed:@"flash_hover"] forState:UIControlStateNormal];
+            [_logicView.btnTorch setImage:[UIImage imageNamed:@"flash_on"] forState:UIControlStateNormal];
         }
         else
         {
-            [_logicView.btnTorch setImage:[UIImage imageNamed:@"flash"] forState:UIControlStateNormal];
+            [_logicView.btnTorch setImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
         }
     }
 }

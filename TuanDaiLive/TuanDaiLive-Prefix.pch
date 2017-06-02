@@ -9,13 +9,14 @@
 #ifndef TuanDaiLive_Prefix_pch
 #define TuanDaiLive_Prefix_pch
 
-
 // 自定义工具类
 #import "TDConfigurationMacros.h"
 #import "TDPublicMethordMacros.h"
 #import "TDThridPartSDKKeyMacros.h"
 #import "TDTreasureMacro.h"
 #import "TDFoundation.h"
+#import "TDHelperMacros.h"
+
 // SDK
 #import "AFNetworking.h"
 #import "MJExtension.h"

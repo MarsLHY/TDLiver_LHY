@@ -376,6 +376,7 @@ BOOL g_bNeedEnterPushSettingView = NO;
             _lbsManager = [[CLLocationManager alloc] init];
             [_lbsManager setDesiredAccuracy:kCLLocationAccuracyBest];
             _lbsManager.delegate = self;
+            
             // 兼容iOS8定位
             SEL requestSelector = NSSelectorFromString(@"requestWhenInUseAuthorization");
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined && [_lbsManager respondsToSelector:requestSelector]) {

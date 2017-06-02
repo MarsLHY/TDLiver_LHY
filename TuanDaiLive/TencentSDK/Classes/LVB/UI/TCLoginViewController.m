@@ -15,7 +15,7 @@
 #import "TCTLSLoginViewController.h"
 #import "TCTLSRegisterViewController.h"
 #import "TLSUserInfo+TDAdd.h"
-
+#import "TDAnchorViewController.h"
 @interface TCLoginViewController ()
 {
     TCLoginParam *_loginParam;
@@ -102,7 +102,9 @@
         [_loginParam saveToLocal];
         // 进入主界面
         [[AppDelegate sharedAppDelegate] enterMainUI];
-        
+//        TDAnchorViewController *test = [[TDAnchorViewController alloc] init];
+//        [self.navigationController pushViewController:test animated:YES];
+
     } fail:^(int code, NSString *msg) {
         [weakSelf pullLoginUI];
     }];

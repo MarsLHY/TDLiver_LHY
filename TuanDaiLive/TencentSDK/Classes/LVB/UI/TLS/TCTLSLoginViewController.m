@@ -213,7 +213,7 @@
     }
     else {
         [_accountTextField setPlaceholder:@"输入用户名"];
-        [_accountTextField setText:@"100001"];
+        [_accountTextField setText:@"100002"];
         _accountTextField.keyboardType = UIKeyboardTypeDefault;
         [_pwdTextField setPlaceholder:@"输入密码"];
         [_pwdTextField setText:@"123456"];
