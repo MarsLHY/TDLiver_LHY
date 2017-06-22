@@ -20,6 +20,9 @@
 #import "TCLiveListModel.h"
 #import "UIView+Additions.h"
 #import "TCUtil.h"
+
+#import "TDUserInfoMgr.h"
+
 #if POD_PITU
 //#import "TCPublishControllerEx.h"
 #endif
@@ -40,6 +43,8 @@ BOOL g_bNeedEnterPushSettingView = NO;
 @import CoreLocation;
 
 @interface TCPushSettingViewController ()<UITextViewDelegate, UINavigationControllerDelegate ,UIImagePickerControllerDelegate, CLLocationManagerDelegate>
+
+@property (weak, nonatomic) IBOutlet UIButton *setScriptBtn;
 
 @property (weak) IBOutlet UIPlaceHolderTextView *titleTextView;
 @property (weak) IBOutlet UIImageView           *coverImageView;
@@ -75,11 +80,20 @@ BOOL g_bNeedEnterPushSettingView = NO;
     
     TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile];
     //从缓存拿用户图像
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userInfo = [ud objectForKey:@"userInfo"];
-    [self.coverImageView sd_setImageWithURL:[NSURL URLWithString:[userInfo objectForKey:@"head"]] placeholderImage:[UIImage imageNamed:@"cover_background"]];
+    TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
+    [self.coverImageView sd_setImageWithURL:[NSURL URLWithString:userInfoModel.head] placeholderImage:[UIImage imageNamed:@"cover_background"]];
+    //是否显示设置封面的提示-->(给你的直播设置一个吸引人的封面)
+    if (userInfoModel.head) {
+        _setScriptBtn.hidden = YES;
+    }else{
+        _setScriptBtn.hidden = NO;
+    }
     
     [self showYTAuthAlertDlg];
+    //默认设置直播间名称为主播名称
+    _titleTextView.text = [NSString stringWithFormat:@"%@的主播间",userInfoModel.nickname];
+    //屏蔽可点击
+    _titleTextView.userInteractionEnabled = NO;
 }
 
 -(void)showYTAuthAlertDlg
@@ -173,11 +187,12 @@ BOOL g_bNeedEnterPushSettingView = NO;
 //        return;
 //    }
     
-    _titleTextView.text = [_titleTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (_titleTextView.text.length == 0) {
-        [HUDHelper alert:@"请输入标题"];
-        return;
-    }
+//    _titleTextView.text = [_titleTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+//    if (_titleTextView.text.length == 0) {
+//        [HUDHelper alert:@"请输入标题"];
+//        return;
+//    }
     
     if ([self.locationSwitch isOn]) {
         if ([_locationLabel.text hasPrefix:@"正在定位"]) {

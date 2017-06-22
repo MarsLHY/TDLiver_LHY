@@ -17,4 +17,7 @@
 #define push_starPush @"push/start"
 //4、结束直播
 #define push_endPush @"push/stop"
+//5、礼物列表
+#define giftList @"live/get-present-list"
+
 #endif /* TDRequestMethod_h */

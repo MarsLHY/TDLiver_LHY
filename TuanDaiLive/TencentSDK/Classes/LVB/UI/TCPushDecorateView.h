@@ -44,6 +44,8 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 -(void)motionTmplSelected:(NSString *)mid;
 -(void)greenSelected:(NSURL *)mid;
 -(void)filterSelected:(int)index;
+//第一版、新增画面质量切换按钮
+- (void)clickQuality:(UIButton *)button;
 @end
 
 /**
@@ -59,6 +61,8 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 @property (nonatomic, retain)UIButton   *btnLog;
 @property (nonatomic, retain)UIButton   *btnTorch;
 @property (nonatomic, retain)UIButton   *btnMusic;
+//新增切换画面质量按钮
+@property (nonatomic,retain) UIButton   *btnVideoQuality;
 @property (nonatomic, retain)UIView     *cover;
 @property (nonatomic, retain)UIView     *vBeauty;
 @property (nonatomic, retain)UITextView *statusView;

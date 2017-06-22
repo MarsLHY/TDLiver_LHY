@@ -11,4 +11,9 @@
 @interface TLSUserInfo (TDAdd)
 
 @property (nonatomic,copy)NSString *userSig;
+
+@property (nonatomic,copy)NSString *appidAt3rd;
+
+@property (nonatomic,copy)NSString *accountTypes;
+
 @end

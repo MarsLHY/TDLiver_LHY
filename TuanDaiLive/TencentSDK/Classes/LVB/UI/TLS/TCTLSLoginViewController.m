@@ -20,8 +20,8 @@
 #import "TDHubModel.h"
 #import "MD5And3DES.h"
 #import "TLSUserInfo+TDAdd.h"
-#import "userInfoModel.h"
 #import <MJExtension/MJExtension.h>
+#import "TDUserInfoMgr.h"
 @interface TCTLSLoginViewController ()
 
 @property (nonatomic) TLSSmsState smsState;
@@ -50,7 +50,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     _isSMSLoginType = NO;
     [self initUI];
     [self initState];
@@ -199,7 +199,7 @@
     _touristBtn.titleEdgeInsets = UIEdgeInsetsMake(imageSize.height + intervalY, -imageSize.width, 0, 0);
     
     if (_isSMSLoginType) {
-        [_accountTextField setPlaceholder:@"输入手机号"];
+        [_accountTextField setPlaceholder:@"输入手机号码"];
         [_accountTextField setText:@""];
         _accountTextField.keyboardType = UIKeyboardTypeNumberPad;
         [_pwdTextField setPlaceholder:@"输入验证码"];
@@ -213,10 +213,10 @@
     }
     else {
         [_accountTextField setPlaceholder:@"输入用户名"];
-        [_accountTextField setText:@"100002"];
+        [_accountTextField setText:@"100055"];
         _accountTextField.keyboardType = UIKeyboardTypeDefault;
         [_pwdTextField setPlaceholder:@"输入密码"];
-        [_pwdTextField setText:@"123456"];
+        [_pwdTextField setText:@"aaa123"];
         [_switchBtn setTitle:@"手机号登录" forState:UIControlStateNormal];
         _pwdTextField.secureTextEntry = YES;
         _sendSMSBtn.hidden = YES;
@@ -301,11 +301,11 @@
         __weak typeof(self) weakSelf = self;
         [[TDNetworkManager sharedInstane] postRequestWithRequestModel:loginModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
             if (responeModel.code == 1) {
-                //缓存用户信息
-                NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-                [ud setObject:responeModel.responeData forKey:@"userInfo"];
+                //userinfoModel  单例管理 存储用户信息
+                TDUserInfoModel *userModel = [TDUserInfoModel mj_objectWithKeyValues:responeModel.responeData];
+                [[TDUserInfoMgr sharedInstance] cacheUserInfo:userModel];
                 // 用户名密码登录
-                //1、走团贷TLS登录
+                //1、走团贷TLS登录 获取sig
                 //参数配置
                 TDRequestModel *requestModel = [[TDRequestModel alloc] init];
                 requestModel.methodName = push_getUserSig;
@@ -325,17 +325,42 @@
                 requestModel.requestType = TDTuandaiSourceType;
                 //发送请求
                 [[TDNetworkManager sharedInstane] postRequestWithRequestModel:requestModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
-                    //设置tls登录之后获取的用户信息
-                    TLSUserInfo *userInfo = [[TLSUserInfo alloc] init];
-                    userInfo.accountType = [responeModel.responeData[@"accountType"] intValue];
-                    NSDictionary *userInfoDic = [ud objectForKey:@"userInfo"];
-                    userInfo.identifier = [NSString stringWithFormat:@"%@",userInfoDic[@"user_id"]];
-                    userInfo.userSig = responeModel.responeData[@"userSig"];
-                    id listener = weakSelf.loginListener;
-                    [listener TLSUILoginOK:userInfo];
-                    //设置腾讯sdkappid
-                    
+                    if (responeModel.code==1) {
+                        //设置tls登录之后获取的用户信息
+                        TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
+                        TLSUserInfo *userInfo = [[TLSUserInfo alloc] init];
+                        userInfo.accountType = [responeModel.responeData[@"accountType"] intValue];
+                        userInfo.identifier = [NSString stringWithFormat:@"%@",userInfoModel.user_id];
+                        userInfo.userSig = responeModel.responeData[@"userSig"];
+                        userInfo.appidAt3rd = responeModel.responeData[@"sdkAppID"];
+                        userInfo.accountTypes = responeModel.responeData[@"accountType"];
+                        
+                        //设置腾讯sdkappid、accountType、sig
+                        NSString *accountType = [NSString stringWithFormat:@"%@",responeModel.responeData[@"accountType"]];
+                        NSString *sdkappid = [NSString stringWithFormat:@"%@",responeModel.responeData[@"sdkAppID"]];
+                        NSString *userSigStr = [NSString stringWithFormat:@"%@",responeModel.responeData[@"userSig"]];
+                        NSDictionary *tencentSdkInfo = @{@"sdkId":sdkappid,
+                                                   @"accountType":accountType,
+                                                       @"userSig":userSigStr
+                                                     };
+                        //缓存腾讯sdkappid、accountType、sig
+                        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                        [ud setObject:tencentSdkInfo forKey:TencentSdkInfo];
+                        
+                        id listener = weakSelf.loginListener;
+                        
+                        // 手动 登录前需要先初始化IMSDK
+                        [[TCIMPlatform sharedInstance] initIMSDK];
+                        //登录
+                        [listener TLSUILoginOK:userInfo];
+                    }else{
+                        [SVProgressHUD showWithStatus:responeModel.message];
+                        [SVProgressHUD dismissWithDelay:1];
+                    }
                 }];
+            }else{
+                [SVProgressHUD showWithStatus:responeModel.message];
+                [SVProgressHUD dismissWithDelay:1];
             }
         }];
     }
@@ -361,6 +386,10 @@
 }
 
 - (void)guestLogin:(UIButton *)button {
+    [SVProgressHUD showWithStatus:@"暂未开通此功能"];
+    [SVProgressHUD dismissWithDelay:1];
+    return;
+    
     // 游客登录
     [[HUDHelper sharedInstance] syncLoading];
     
@@ -498,7 +527,7 @@
     }
     [[HUDHelper sharedInstance] syncStopLoading];
     [HUDHelper alertTitle:errInfo.sErrorTitle message:errInfo.sErrorMsg cancel:@"确定"];
-    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
+//    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
 }
 
 - (void)OnSmsLoginTimeout:(TLSErrInfo *)errInfo {
@@ -507,7 +536,7 @@
     }
     [[HUDHelper sharedInstance] syncStopLoading];
     [HUDHelper alertTitle:errInfo.sErrorTitle message:errInfo.sErrorMsg cancel:@"确定"];
-    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
+//    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
 }
 
 

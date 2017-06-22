@@ -312,7 +312,7 @@
                 } fail:^(TLSErrInfo *errInfo) {
                     [[HUDHelper sharedInstance] syncStopLoading];
                     [HUDHelper alertTitle:errInfo.sErrorTitle message:errInfo.sErrorMsg cancel:@"确定"];
-                    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
+//                    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
                 }];
                 if (ret2 != 0) {
                     [[HUDHelper sharedInstance] syncStopLoading];
@@ -323,7 +323,7 @@
         } fail:^(TLSErrInfo *errInfo) {
             [[HUDHelper sharedInstance] syncStopLoading];
             [HUDHelper alertTitle:errInfo.sErrorTitle message:errInfo.sErrorMsg cancel:@"确定"];
-            NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
+//            NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
         }];
         
         if (ret != 0) {
@@ -451,7 +451,7 @@
         }
         else {
             // bug
-            NSLog(@"%@ not conform TLSSmsLoginListener", vc);
+//            NSLog(@"%@ not conform TLSSmsLoginListener", vc);
             [[HUDHelper sharedInstance] syncStopLoading];
         }
     });
@@ -470,7 +470,7 @@
     }
     [[HUDHelper sharedInstance] syncStopLoading];
     [HUDHelper alertTitle:errInfo.sErrorTitle message:errInfo.sErrorMsg cancel:@"确定"];
-    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
+//    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
 }
 
 - (void)OnSmsRegTimeout:(TLSErrInfo *)errInfo {
@@ -479,7 +479,7 @@
     }
     [[HUDHelper sharedInstance] syncStopLoading];
     [HUDHelper alertTitle:errInfo.sErrorTitle message:errInfo.sErrorMsg cancel:@"确定"];
-    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
+//    NSLog(@"%s %d %@", __func__, errInfo.dwErrorCode, errInfo.sExtraMsg);
 }
 
 

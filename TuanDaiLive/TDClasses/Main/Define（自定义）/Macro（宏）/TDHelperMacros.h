@@ -10,11 +10,11 @@
 #define TDHelperMacros_h
 
 //屏幕比例适配
-#define TDMain_Screen_Height      [[UIScreen mainScreen] bounds].size.height
-#define TDMain_Screen_Width       [[UIScreen mainScreen] bounds].size.width
+#define Main_Screen_Height      [[UIScreen mainScreen] bounds].size.height
+#define Main_Screen_Width       [[UIScreen mainScreen] bounds].size.width
 //以iphone5，5s，5c为基本机型，其他型号机器按比例系数做乘法.
-#define TDAutoSizeScaleX          TDMain_Screen_Width/320.f
-#define TDAutoSizeScaleY          TDMain_Screen_Height/568.f
+#define TDAutoSizeScaleX          Main_Screen_Width/320.f
+#define TDAutoSizeScaleY          Main_Screen_Height/568.f
 
 // 当前版本
 #define FSystemVersion          ([[[UIDevice currentDevice] systemVersion] floatValue])

@@ -125,7 +125,7 @@
     }
     else
     {
-        NSLog(@"startVideoPreview invalid _recordType");
+//        NSLog(@"startVideoPreview invalid _recordType");
     }
 }
 
@@ -140,7 +140,7 @@
     }
     else
     {
-        NSLog(@"stopVideoPreview invalid _recordType");
+//        NSLog(@"stopVideoPreview invalid _recordType");
     }
 }
 
@@ -218,7 +218,7 @@
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
     [library writeVideoAtPathToSavedPhotosAlbum:[NSURL fileURLWithPath:_recordResult.videoPath] completionBlock:^(NSURL *assetURL, NSError *error) {
         if (error != nil) {
-            NSLog(@"save video fail:%@", error);
+//            NSLog(@"save video fail:%@", error);
         }
     }];
     [self.navigationController popViewControllerAnimated:YES];

@@ -57,8 +57,6 @@ static NSInteger chatToolViewHeight = 64;
     if (self == [super initWithFrame:frame]) {
         //创建UI
         [self createUI];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardShow:) name:UIKeyboardWillShowNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardHidden:) name:UIKeyboardWillHideNotification object:nil];
         self.backgroundColor = [UIColor purpleColor];
     }
     return self;
@@ -70,6 +68,9 @@ static NSInteger chatToolViewHeight = 64;
 }
 
 - (void)createUI{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardHidden:) name:UIKeyboardWillHideNotification object:nil];
+    
     //1、创建聊天tableview
     _chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.f, 300*TDAutoSizeScaleX, 200*TDAutoSizeScaleX, 200*TDAutoSizeScaleX) style:UITableViewStylePlain];
     _chatTableView.dataSource = self;
@@ -78,25 +79,24 @@ static NSInteger chatToolViewHeight = 64;
     self.chatTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.chatTableView.estimatedRowHeight = 30;
     self.chatTableView.showsVerticalScrollIndicator = NO;
-    self.chatTableView.hidden = YES;
     [self addSubview:_chatTableView];
     
+    _chatToolView.hidden = YES;
     //礼物飘屏
-    self.bulletViewOne.frame = CGRectMake(0, 0, TDMain_Screen_Width, 34);
-    self.bulletViewTwo.frame = CGRectMake(0, CGRectGetMaxY(self.bulletViewOne.frame) + 10, TDMain_Screen_Width, 34);
+    self.bulletViewOne.frame = CGRectMake(0, 0, Main_Screen_Width, 34);
+    self.bulletViewTwo.frame = CGRectMake(0, CGRectGetMaxY(self.bulletViewOne.frame) + 10, Main_Screen_Width, 34);
     self.bulletViewOne.backgroundColor = [UIColor blueColor];
     self.bulletViewTwo.backgroundColor = [UIColor blueColor];
 
     //
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(coverViewClick)];
     [self.coverView addGestureRecognizer:tap];
-    
     //送礼
     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(giveGoodViewClick)];
     [self.giveGoodView addGestureRecognizer:tap1];
 
     //2、创建底部工具栏View
-    UIView *bottomBgView = [[UIView alloc] initWithFrame:CGRectMake(30*TDAutoSizeScaleX, TDMain_Screen_Height-30*TDAutoSizeScaleX, 260*TDAutoSizeScaleX, 30*TDAutoSizeScaleX)];
+    UIView *bottomBgView = [[UIView alloc] initWithFrame:CGRectMake(30*TDAutoSizeScaleX, Main_Screen_Height-30*TDAutoSizeScaleX, 260*TDAutoSizeScaleX, 30*TDAutoSizeScaleX)];
     bottomBgView.backgroundColor = [UIColor grayColor];
     [self addSubview:bottomBgView];
     
@@ -125,6 +125,8 @@ static NSInteger chatToolViewHeight = 64;
     UIButton *micBtn = [[UIButton alloc] initWithFrame:CGRectMake(musicBtn.right, 0, 40*TDAutoSizeScaleX, 30*TDAutoSizeScaleX)];
     [micBtn setTitle:@"关麦" forState:UIControlStateNormal];
     [bottomBgView addSubview:micBtn];
+    
+    [self giveGiftView];
 }
 
 -(void)setMsgHandler:(AVIMMsgHandler *)msgHandler {
@@ -213,20 +215,17 @@ static NSInteger chatToolViewHeight = 64;
     NSDictionary *dict = info.userInfo;
     NSValue *value = [dict objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect rect = value.CGRectValue;
-    NSLog(@"%f",rect.origin.y);
     self.chatToolView.hidden = NO;
     [UIView animateWithDuration:0.25 animations:^{
-        self.chatToolView.frame = CGRectMake(0, rect.origin.y - chatToolViewHeight, TDMain_Screen_Width, chatToolViewHeight);
-        NSLog(@"%f",_chatToolView.frame.origin.y);
+        self.chatToolView.frame = CGRectMake(0, rect.origin.y - chatToolViewHeight, Main_Screen_Width, chatToolViewHeight);
     } completion:^(BOOL finished) {
-        self.coverView.frame = CGRectMake(0, 0, TDMain_Screen_Width, CGRectGetMinY(self.chatToolView.frame));
+        self.coverView.frame = CGRectMake(0, 0, Main_Screen_Width, CGRectGetMinY(self.chatToolView.frame));
         self.coverView.hidden = NO;
     }];
 }
 -(void)keyBoardHidden:(NSNotification*)info {
     [UIView animateWithDuration:0.25 animations:^{
-        self.chatToolView.frame = CGRectMake(0, TDMain_Screen_Height + chatToolViewHeight, TDMain_Screen_Width, chatToolViewHeight);
-        NSLog(@"%f",_chatToolView.frame.origin.y);
+        self.chatToolView.frame = CGRectMake(0, Main_Screen_Height + chatToolViewHeight, Main_Screen_Width, chatToolViewHeight);
     } completion:^(BOOL finished) {
         self.chatToolView.hidden = YES;
         self.coverView.hidden = YES;
@@ -243,8 +242,8 @@ static NSInteger chatToolViewHeight = 64;
 
 -(TDBeautyView *)beautyView {
     if (!_beautyView) {
-        _beautyView = [TDBeautyView new];
-//        _beautyView = [[TDBeautyView alloc] initWithFrame:CGRectMake(0, TDMain_Screen_Height-140*TDAutoSizeScaleX, TDMain_Screen_Width, 140*TDAutoSizeScaleX)];
+//        _beautyView = [TDBeautyView new];
+        _beautyView = [[TDBeautyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height-140*TDAutoSizeScaleX, Main_Screen_Width, 140*TDAutoSizeScaleX)];
         _beautyView.delegate = self;
         [self addSubview:_beautyView];
         
@@ -257,8 +256,8 @@ static NSInteger chatToolViewHeight = 64;
 
 -(TDChatToolView *)chatToolView {
     if (!_chatToolView) {
-        _chatToolView = [TDChatToolView new];
-//        _chatToolView = [[TDChatToolView alloc] initWithFrame:CGRectMake(0, TDMain_Screen_Height + chatToolViewHeight, TDMain_Screen_Width, chatToolViewHeight)];
+//        _chatToolView = [TDChatToolView new];
+        _chatToolView = [[TDChatToolView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height + chatToolViewHeight, Main_Screen_Width, chatToolViewHeight)];
         _chatToolView.delegate = self;
         [self addSubview:_chatToolView];
     }
@@ -268,7 +267,7 @@ static NSInteger chatToolViewHeight = 64;
 -(UIView *)coverView {
     if (!_coverView) {
         _coverView = [UIView new];
-        _coverView.backgroundColor = [UIColor blackColor];
+        _coverView.backgroundColor = [UIColor clearColor];
         [self addSubview:_coverView];
     }
     return _coverView;
@@ -277,8 +276,8 @@ static NSInteger chatToolViewHeight = 64;
 - (UIView *)bulletsupview{
     if (!_bulletsupview) {
         //创建礼物飘屏view
-        _bulletsupview = [UIView new];
-//        _bulletsupview = [[UIView alloc] initWithFrame:CGRectMake(0, 180*TDAutoSizeScaleX, TDMain_Screen_Width, 100*TDAutoSizeScaleX)];
+//        _bulletsupview = [UIView new];
+        _bulletsupview = [[UIView alloc] initWithFrame:CGRectMake(0, 180*TDAutoSizeScaleX, Main_Screen_Width, 100*TDAutoSizeScaleX)];
         _bulletsupview.backgroundColor = [UIColor greenColor];
         [self addSubview:_bulletsupview];
     }

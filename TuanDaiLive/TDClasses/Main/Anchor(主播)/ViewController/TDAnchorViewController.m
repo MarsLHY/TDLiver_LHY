@@ -18,7 +18,7 @@
 #import <AVFoundation/AVMediaFormat.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "TCPusherMgr.h"
-
+#import "TDUserInfoMgr.h"
 @interface TDAnchorViewController ()<TXLivePushListener>
 {
 
@@ -86,12 +86,12 @@
 
 - (void)createUI{
     //1、视频画面的父Veiw
-    _playerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, TDMain_Screen_Width, TDMain_Screen_Height)];
+    _playerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, Main_Screen_Width, Main_Screen_Height)];
     _playerView.backgroundColor = UIColorFromRGB(0xFF4040);
     [self.view addSubview:_playerView];
     
     //2、创建关闭页面Button
-    _closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(TDMain_Screen_Width-40*TDAutoSizeScaleX, 10*TDAutoSizeScaleX, 30*TDAutoSizeScaleX, 50*TDAutoSizeScaleX)];
+    _closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width-40*TDAutoSizeScaleX, 10*TDAutoSizeScaleX, 30*TDAutoSizeScaleX, 50*TDAutoSizeScaleX)];
     [_closeBtn setTitle:@"关闭" forState:UIControlStateNormal];
     [_closeBtn addTarget:self action:@selector(exitRoom:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_closeBtn];
@@ -124,16 +124,15 @@
 #pragma mark - 创建直播聊天室
 - (void)createLiveRoom{
     // 创建群组
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userInfoDic = [ud objectForKey:@"userInfo"];
+    TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
     //    TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile];
-    _liveInfo.userinfo.headpic = [userInfoDic objectForKey:@"head"];
-    _liveInfo.userinfo.nickname = [userInfoDic objectForKey:@"nickname"];
+    _liveInfo.userinfo.headpic = userInfoModel.head;
+    _liveInfo.userinfo.nickname = userInfoModel.nickname;
     
     __weak typeof(self) weakSelf = self;
     _msgHandler = [[AVIMMsgHandler alloc] init];
     
-    _liveInfo.groupid = [NSString stringWithFormat:@"%@",[userInfoDic objectForKey:@"user_id"]];
+    _liveInfo.groupid = [NSString stringWithFormat:@"%@",userInfoModel.user_id];
     //申请加入群组
     [_msgHandler joinLiveRoom:_liveInfo.groupid handler:^(int errCode) {
         if (errCode==0) {
@@ -151,7 +150,7 @@
             starPushModel.param = @{@"appid":TDAppid,
                                     @"timestamp":timeString,
                                     @"token":token,
-                                    @"room_id":[userInfoDic objectForKey:@"user_id"]
+                                    @"room_id":userInfoModel.user_id
                                     };
             starPushModel.requestType = TDTuandaiSourceType;
             //发送请求
@@ -215,8 +214,8 @@
 
 #pragma mark - 停止推流 关闭按钮点击事件
 - (void)exitRoom:(UIButton *)button{
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userInfoDic = [ud objectForKey:@"userInfo"];
+    TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
+    
     //参数配置
     TDRequestModel *endPushModel = [[TDRequestModel alloc] init];
     endPushModel.methodName = push_endPush;
@@ -230,7 +229,7 @@
     endPushModel.param = @{@"appid":TDAppid,
                            @"timestamp":timeString,
                            @"token":token,
-                           @"room_id":[userInfoDic objectForKey:@"user_id"]
+                           @"room_id":userInfoModel.user_id
                            };
     endPushModel.requestType = TDTuandaiSourceType;
     //发起请求
@@ -282,7 +281,7 @@
     MPMediaItem *item = [items objectAtIndex:0];
     
     NSURL *url = [item valueForProperty:MPMediaItemPropertyAssetURL];
-    NSLog(@"MPMediaItemPropertyAssetURL = %@", url);
+//    NSLog(@"MPMediaItemPropertyAssetURL = %@", url);
     
     if (mediaPicker.editing) {
         mediaPicker.editing = NO;

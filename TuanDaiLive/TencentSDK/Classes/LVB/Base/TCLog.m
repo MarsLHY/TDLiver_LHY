@@ -52,7 +52,7 @@ static TCLog *_shareInstance = nil;
 
 -(void) onLog:(NSString*)log LogLevel:(int)level WhichModule:(NSString*)module
 {
-    NSLog(@"rtmpsdk:%@",log);
+//    NSLog(@"rtmpsdk:%@",log);
     NSDate *date = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
@@ -83,7 +83,7 @@ static TCLog *_shareInstance = nil;
     va_start(arglist, formatStr);
     NSString *outStr = [[NSString alloc] initWithFormat:formatStr arguments:arglist];
     va_end(arglist);
-    NSLog(@"applog:%@", outStr);
+//    NSLog(@"applog:%@", outStr);
     
     NSDate *date = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

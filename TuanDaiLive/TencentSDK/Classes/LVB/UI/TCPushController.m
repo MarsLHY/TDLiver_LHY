@@ -24,7 +24,7 @@
 #import "TDRequestModel.h"
 #import "TDNetworkManager.h"
 #import "MD5And3DES.h"
-
+#import "TDUserInfoMgr.h"
 
 #if POD_PITU
 #import "MCCameraDynamicView.h"
@@ -68,6 +68,7 @@
     UIView             *_videoParentView;
     
     AVIMMsgHandler *_msgHandler;
+    
 }
 
 - (instancetype)initWithPublishInfo:(TCLiveInfo *)liveInfo {
@@ -103,6 +104,7 @@
     _txLivePushonfig = [[TXLivePushConfig alloc] init];
     _txLivePushonfig.frontCamera = YES;
     _txLivePushonfig.enableAutoBitrate = NO;
+    _txLivePushonfig.autoAdjustStrategy = YES;
     //由于iphone4s及以下机型前置摄像头不支持540p，故iphone4s及以下采用360p
     _txLivePushonfig.videoResolution = [self isSuitableMachine:5 ] ? VIDEO_RESOLUTION_TYPE_540_960 : VIDEO_RESOLUTION_TYPE_360_640;
     _txLivePushonfig.videoBitratePIN = 1000;
@@ -119,18 +121,16 @@
     _txLivePublisher = [[TXLivePush alloc] initWithConfig:_txLivePushonfig];
     
     // 创建群组
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userInfoDic = [ud objectForKey:@"userInfo"];
-//    TCUserInfoData  *profile = [[TCUserInfoMgr sharedInstance] getUserProfile];
-    _liveInfo.userinfo.headpic = [userInfoDic objectForKey:@"head"];
-    _liveInfo.userinfo.nickname = [userInfoDic objectForKey:@"nickname"];
+    TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
+
+    _liveInfo.userinfo.headpic = userInfoModel.head;
+    _liveInfo.userinfo.nickname = userInfoModel.nickname;
     
     __weak typeof(self) weakSelf = self;
     _msgHandler = [[AVIMMsgHandler alloc] init];
     
-    _liveInfo.groupid = [NSString stringWithFormat:@"%@",[userInfoDic objectForKey:@"user_id"]];
+    _liveInfo.groupid = [NSString stringWithFormat:@"%@",userInfoModel.user_id];//[userInfoDic objectForKey:@"user_id"]
     //申请加入群组
-    NSLog(@"%@",_liveInfo.groupid);
     [_msgHandler joinLiveRoom:_liveInfo.groupid handler:^(int errCode) {
         NSLog(@"%d",errCode);
         if (errCode==0) {
@@ -148,7 +148,7 @@
             starPushModel.param = @{@"appid":TDAppid,
                                     @"timestamp":timeString,
                                     @"token":token,
-                                    @"room_id":[userInfoDic objectForKey:@"user_id"]
+                                    @"room_id":userInfoModel.user_id
                                     };
             starPushModel.requestType = TDTuandaiSourceType;
             //发送请求
@@ -272,7 +272,7 @@
     _lastTime = _startTime;
 }
 
-
+#pragma mark - 开始推流
 -(BOOL)startRtmp{
     [self clearLog];
     if (_rtmpUrl.length == 0) {
@@ -309,6 +309,7 @@
     if(_txLivePublisher != nil)
     {
         _txLivePublisher.delegate = self;
+        //设置默认清晰度
         [self.txLivePublisher setVideoQuality:VIDEO_QUALITY_HIGH_DEFINITION];
         if (!_isPreviewing) {
             [_txLivePublisher startPreview:_videoParentView];
@@ -318,6 +319,7 @@
             NSLog(@"推流器启动失败");
             return NO;
         }
+        
         [_txLivePublisher setEyeScaleLevel:_eye_level];
         [_txLivePublisher setFaceScaleLevel:_face_level];
         [_txLivePublisher setMirror:NO];
@@ -402,10 +404,9 @@
     }
 }
 
-//停止推流
+#pragma mark - 停止推流  发送退出登录请求
 - (void)stopRtmp {
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userInfoDic = [ud objectForKey:@"userInfo"];
+    TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
     //参数配置
     TDRequestModel *endPushModel = [[TDRequestModel alloc] init];
     endPushModel.methodName = push_endPush;
@@ -419,7 +420,7 @@
     endPushModel.param = @{@"appid":TDAppid,
                             @"timestamp":timeString,
                             @"token":token,
-                            @"room_id":[userInfoDic objectForKey:@"user_id"]
+                            @"room_id":userInfoModel.user_id
                             };
     endPushModel.requestType = TDTuandaiSourceType;
     //发起请求
@@ -535,7 +536,6 @@
 }
 
 #pragma mark UI EVENT
-
 -(void)closeRTMP {
     [self stopRtmp];
     
@@ -574,11 +574,13 @@
     [_txLivePublisher setMirror:!_camera_switch];
 #endif
     [_txLivePublisher switchCamera];
+    
 }
 
 -(void) clickBeauty:(UIButton*) btn
 {
     _logicView.vBeauty.hidden = NO;
+    
 }
 
 - (void)clickMusicSelect:(UIButton *)btn {
@@ -597,6 +599,17 @@
     _logicView.vMusicPanel.hidden = YES;
     
     [_txLivePublisher stopBGM];
+}
+
+//第一版、新增清晰度切换方法代理方法
+- (void)clickQuality:(UIButton *)button{
+    if (button.tag==100) {//超清
+        [_txLivePublisher setVideoQuality:VIDEO_QUALITY_SUPER_DEFINITION];
+    }else if (button.tag==101){//高清
+        [_txLivePublisher setVideoQuality:VIDEO_QUALITY_HIGH_DEFINITION];
+    }else{//流畅
+        [_txLivePublisher setVideoQuality:VIDEO_QUALITY_STANDARD_DEFINITION];
+    }
 }
 
 //- (void)clickVolumeSwitch:(UIButton *)button {
@@ -618,7 +631,7 @@
 /**
  @method 获取指定宽度width的字符串在UITextView上的高度
  @param textView 待计算的UITextView
- @param Width 限制字符串显示区域的宽度
+ @param width 限制字符串显示区域的宽度
  @result float 返回的高度
  */
 - (float) heightForString:(UITextView *)textView andWidth:(float)width{
@@ -719,7 +732,6 @@
 
 -(void) sliderValueChangeEx:(UISlider*) obj
 {
-
 
 
 }
@@ -827,15 +839,18 @@
     UMSocialMessageObject *messageObject = [UMSocialMessageObject messageObject];
     
     NSString *title = _liveInfo.title;
-    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *tencentSdkInfo = [ud objectForKey:TencentSdkInfo];
+    //kTCIMSDKAppId  [tencentSdkInfo objectForKey:@"sdkId"]
+    //kTCIMSDKAccountType  [tencentSdkInfo objectForKey:@"accountType"]
     NSString *url = [NSString stringWithFormat:@"%@?userid=%@&type=%@&fileid=%@&ts=%@&sdkappid=%@&acctype=%@",
                      kLivePlayShareAddr,
                      TC_PROTECT_STR([_liveInfo.userid stringByUrlEncoding]),
                      [NSString stringWithFormat:@"%d", _liveInfo.type],
                      TC_PROTECT_STR([_liveInfo.fileid stringByUrlEncoding]),
                      [NSString stringWithFormat:@"%d", _liveInfo.timestamp],
-                     kTCIMSDKAppId,
-                     kTCIMSDKAccountType];
+                     [tencentSdkInfo objectForKey:@"sdkId"],
+                     [tencentSdkInfo objectForKey:@"accountType"]];
     NSString *text = [NSString stringWithFormat:@"%@ 正在直播", _liveInfo.userinfo.nickname ? _liveInfo.userinfo.nickname : _liveInfo.userid];
     
     /* 以下分享类型，开发者可根据需求调用 */

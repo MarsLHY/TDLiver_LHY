@@ -45,7 +45,7 @@ static TCStreamMergeMgr * _sharedInstance = NULL;
 {
     _mainStreamId = [TCUtil getStreamIDByStreamUrl:streamUrl];
     
-    NSLog(@"MergeVideoStream: setMainVideoStream %@", _mainStreamId);
+//    NSLog(@"MergeVideoStream: setMainVideoStream %@", _mainStreamId);
 }
 
 -(void) setMainVideoStreamResolution:(CGSize) size
@@ -63,7 +63,7 @@ static TCStreamMergeMgr * _sharedInstance = NULL;
     }
     
     NSString * streamId = [TCUtil getStreamIDByStreamUrl:streamUrl];
-    NSLog(@"MergeVideoStream: addSubVideoStream %@", streamId);
+//    NSLog(@"MergeVideoStream: addSubVideoStream %@", streamId);
     
     for (NSString* item in _subStreamIds) {
         if ([item isEqualToString:streamId] == YES) {
@@ -79,7 +79,7 @@ static TCStreamMergeMgr * _sharedInstance = NULL;
 {
     NSString * streamId = [TCUtil getStreamIDByStreamUrl:streamUrl];
     
-    NSLog(@"MergeVideoStream: delSubVideoStream %@", streamId);
+//    NSLog(@"MergeVideoStream: delSubVideoStream %@", streamId);
     
     BOOL bExist = NO;
     for (NSString* item in _subStreamIds) {
@@ -97,7 +97,7 @@ static TCStreamMergeMgr * _sharedInstance = NULL;
 
 -(void) resetMergeState
 {
-    NSLog(@"MergeVideoStream: resetMergeState");
+//    NSLog(@"MergeVideoStream: resetMergeState");
     
     [_subStreamIds removeAllObjects];
     
@@ -141,7 +141,7 @@ static TCStreamMergeMgr * _sharedInstance = NULL;
     for (NSString* item in _subStreamIds) {
         streamsLog = [NSString stringWithFormat:@"%@ subStream%d: %@", streamsLog, streamIndex++, item];
     }
-    NSLog(@"MergeVideoStream: send request, %@ ,retryIndex: %d", streamsLog, [numRetryIndex intValue]);
+//    NSLog(@"MergeVideoStream: send request, %@ ,retryIndex: %d", streamsLog, [numRetryIndex intValue]);
     
     [TCUtil asyncSendHttpRequest:dictParam handler:^(int result, NSDictionary *resultDict) {
         NSString * strMessage = @"";
@@ -149,7 +149,7 @@ static TCStreamMergeMgr * _sharedInstance = NULL;
             strMessage = resultDict[@"msg"];
         }
         
-        NSLog(@"MergeVideoStream: recv response, message = %@", strMessage);
+//        NSLog(@"MergeVideoStream: recv response, message = %@", strMessage);
         
         BOOL bSuccess = NO;
         NSDictionary * dictMessage = [TCUtil jsonData2Dictionary:strMessage];
@@ -247,7 +247,7 @@ static TCStreamMergeMgr * _sharedInstance = NULL;
     NSString *jsonString = @"";
     if (!jsonData)
     {
-        NSLog(@"Got an error: %@", error);
+//        NSLog(@"Got an error: %@", error);
     }
     else
     {

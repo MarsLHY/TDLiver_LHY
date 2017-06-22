@@ -16,9 +16,13 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.appidAt3rd = kTCIMSDKAppId;
-        self.sdkAppId = [kTCIMSDKAppId intValue];
-        self.accountType = kTCIMSDKAccountType;
+        //kTCIMSDKAppId [tencentSdkInfo objectForKey:@"sdkId"]
+        //kTCIMSDKAccountType
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        NSDictionary *tencentSdkInfo = [ud objectForKey:TencentSdkInfo];
+        self.appidAt3rd = [tencentSdkInfo objectForKey:@"sdkId"];
+        self.sdkAppId = [[tencentSdkInfo objectForKey:@"sdkId"] intValue];
+        self.accountType = [tencentSdkInfo objectForKey:@"accountType"];
     }
     return self;
 }
@@ -29,6 +33,7 @@
         defaults = [NSUserDefaults standardUserDefaults];
     }
     NSString *useridKey = [defaults objectForKey:kIMLoginParamKey];
+    
     if (useridKey) {
         NSString *strLoginParam = [defaults objectForKey:useridKey];
         NSDictionary *dic = [TCUtil jsonData2Dictionary: strLoginParam];
@@ -41,9 +46,11 @@
             param.appidAt3rd = [dic objectForKey:@"appidAt3rd"];
             param.sdkAppId = [[dic objectForKey:@"sdkAppId"] intValue];
             param.isLastAppExt = [[dic objectForKey:@"isLastAppExt"] intValue];
-            
             // 可能存在没有卸载却更换了appid的情况
-            if (param.sdkAppId != [kTCIMSDKAppId intValue]) {
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            NSDictionary *tencentSdkInfo = [ud objectForKey:TencentSdkInfo];
+            //kTCIMSDKAppId  [tencentSdkInfo objectForKey:@"sdkId"]
+            if (param.sdkAppId != [[tencentSdkInfo objectForKey:@"sdkId"] intValue]) {
                 return [[TCLoginParam alloc] init];
             } else {
                 return param;
@@ -64,7 +71,6 @@
     }
     
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    
     [dic setObject:@(self.tokenTime) forKey:@"tokenTime"];
     [dic setObject:self.accountType forKey:@"accountType"];
     [dic setObject:self.identifier forKey:@"identifier"];
@@ -76,7 +82,6 @@
 #else
     [dic setObject:@(0) forKey:@"isLastAppExt"];
 #endif
-    
     NSData *data = [TCUtil dictionary2JsonData: dic];
     NSString *strLoginParam = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSString *useridKey = [NSString stringWithFormat:@"%@_LoginParam", self.identifier];

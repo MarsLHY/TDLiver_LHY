@@ -11,13 +11,14 @@
 
 #pragma mark - 测试服务器域名
 //团贷网直播
-static NSString *TD110Server = @"http://10.103.8.188:1022/v1";
+static NSString *TDTestServer = @"http://10.103.8.188:1022/v1";
 
 #pragma mark - 19环境服务器域名
 
 #pragma mark - beta服务器域名
 
 #pragma mark - 正式服务器域名
+static NSString *TDOnlineServer = @"http://10.103.8.188:1022/v1";
 
 @implementation TDDomainManager
 
@@ -34,7 +35,7 @@ static NSString *TD110Server = @"http://10.103.8.188:1022/v1";
                  requestSourceType:(TDRequstSourceType)requestSourceType{
 
     NSString *host = @"";
-    
+
     //1:测试服务器  2:19服务器 3:beta服务器  4：线上服务器
 #if TDDomainType == 1
 
@@ -76,6 +77,13 @@ static NSString *TD110Server = @"http://10.103.8.188:1022/v1";
     
     NSString *host = @"";
  
+    //1.团贷网直播
+    if (requestSourceType == TDTuandaiSourceType) {
+        
+        host = TDOnlineServer;
+    }
+
+    
     return host;
 }
 
@@ -96,7 +104,7 @@ static NSString *TD110Server = @"http://10.103.8.188:1022/v1";
     //1.团贷网直播
     if (requestSourceType == TDTuandaiSourceType) {
         
-        host = TD110Server;
+        host = TDTestServer;
     }
     
     return host;

@@ -18,6 +18,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIImageView+WebCache.h>
 
+#import "TDUserInfoMgr.h"
 
 #pragma mark 存储用户个人信息item
 @implementation TCUserInfoCellItem
@@ -132,15 +133,17 @@
             self.textLabel.text = nil;
             self.userInteractionEnabled = NO;
             self.accessoryType = UITableViewCellAccessoryNone;
-            TCUserInfoData  *_profile = [[TCUserInfoMgr sharedInstance] getUserProfile ];
+//            TCUserInfoData  *_profile = [[TCUserInfoMgr sharedInstance] getUserProfile ];
+            TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
+            //获取缓存头像
             CGRect mainScreenSize = [ UIScreen mainScreen ].applicationFrame;
-            CGSize titleTextSize  = [_profile.nickName sizeWithAttributes:@{NSFontAttributeName:nickText.font}];
-            [faceImage sd_setImageWithURL:[NSURL URLWithString:[TCUtil transImageURL2HttpsURL:_profile.faceURL]] placeholderImage:[UIImage imageNamed:@"default_user"]];
+            CGSize titleTextSize  = [userInfoModel.nickname sizeWithAttributes:@{NSFontAttributeName:nickText.font}];
+            [faceImage sd_setImageWithURL:[NSURL URLWithString:userInfoModel.head] placeholderImage:[UIImage imageNamed:@"face"]];
             faceImage.frame = CGRectMake((mainScreenSize.size.width-100)/2, 50,100, 100);
             faceImage.layer.cornerRadius = 50;
-            nickText.text  = _profile.nickName;
+            nickText.text  = userInfoModel.nickname;
             nickText.frame = CGRectMake(0, 175,mainScreenSize.size.width,titleTextSize.height);
-            identifierText.text  = [NSString stringWithFormat:@"ID:%@",_profile.identifier];
+            identifierText.text  = [NSString stringWithFormat:@"ID:%@",userInfoModel.user_id];
             identifierText.frame = CGRectMake(0, 175+10+titleTextSize.height,mainScreenSize.size.width, titleTextSize.height);
         }
         break;
@@ -249,8 +252,9 @@
         {
             int xPos = self.frame.origin.x + mainScreenSize.size.width - mainScreenSize.size.width/10 - 50;
             TCUserInfoData  *_profile   = [[TCUserInfoMgr sharedInstance] getUserProfile ];
+            TDUserInfoModel *userInfo = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
             faceImage.frame = CGRectMake(xPos, self.frame.origin.y+7,50, 50);
-            [faceImage sd_setImageWithURL:[NSURL URLWithString:[TCUtil transImageURL2HttpsURL:_profile.faceURL]] placeholderImage:[UIImage imageNamed:@"default_user"]];
+            [faceImage sd_setImageWithURL:[NSURL URLWithString:[TCUtil transImageURL2HttpsURL:userInfo.head]] placeholderImage:[UIImage imageNamed:@"face"]];
             
             self.accessoryType = UITableViewCellAccessoryNone;
         }

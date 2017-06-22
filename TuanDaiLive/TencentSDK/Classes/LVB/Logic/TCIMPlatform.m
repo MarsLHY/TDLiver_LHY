@@ -57,10 +57,18 @@ static TCIMPlatform *_sharedInstance = nil;
 }
 
 - (void)initIMSDK {
+    //kTCIMSDKAppId
+    //kTCIMSDKAccountType
     static dispatch_once_t predicate;
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *tencentSdkInfo = [ud objectForKey:TencentSdkInfo];
+    int sdkid = [[tencentSdkInfo objectForKey:@"sdkId"] intValue];
+    NSString *accountType = [tencentSdkInfo objectForKey:@"accountType"];
+    
     dispatch_once(&predicate, ^{
+        [[TIMManager sharedInstance] setLogLevel:TIM_LOG_ERROR];
         [[TIMManager sharedInstance] setEnv:0]; // 0 正式环境（默认） 1 测试环境
-        [[TIMManager sharedInstance] initSdk:[kTCIMSDKAppId intValue] accountType:kTCIMSDKAccountType];
+        [[TIMManager sharedInstance] initSdk:sdkid accountType:accountType];
         [[TIMManager sharedInstance] setUserStatusListener:self];
     });
 }
@@ -68,7 +76,7 @@ static TCIMPlatform *_sharedInstance = nil;
 #ifndef APP_EXT
 - (void)guestLogin:(TLSSucc)succ fail:(TLSFail)fail {
     // 先初始化IMSDK
-    [self initIMSDK];
+//    [self initIMSDK];
     
     TLSErrInfo *err = [[TLSErrInfo alloc] init];
     __weak typeof(self) weakSelf = self;

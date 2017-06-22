@@ -7,17 +7,29 @@
 //
 
 #import "ViewController.h"
-
-@interface ViewController ()
+@interface ViewController ()<UIWebViewDelegate>
 
 @end
 
 @implementation ViewController
 
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//}
+//
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//    
+//    [self.navigationController setNavigationBarHidden:NO animated:YES];
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"u31"]];
     
+    UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+    bgImgView.image = [UIImage imageNamed:@"loginBG.jpg"];
+    [self.view addSubview:bgImgView];
 }
 
 @end

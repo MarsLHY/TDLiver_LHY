@@ -89,7 +89,6 @@
     }];
 }
 
-
 #pragma mark - TIMMessageListener
 - (void)onNewMessage:(NSArray *)msgs {
     // TODO 可以将onThread改为另外的线程
@@ -99,7 +98,6 @@
 - (void)onHandleNewMessage:(NSArray *)msgs {
     for(TIMMessage *msg in msgs) {
         TIMConversationType conType = msg.getConversation.getType;
-        
         switch (conType) {
             case TIM_C2C: {
                 //目前只有连麦模块使用了C2C消息
@@ -121,6 +119,7 @@
                 // 所以在onRecvGroupSystemMessage里面通过sysElem.group来判断
 //                if ([[msg.getConversation getReceiver] isEqualToString:_groupId]) {
                     [self onRecvGroupSystemMessage:msg];
+                NSLog(@"*********群系统消息%@*********",msg);
 //                }
                 break;
             }
@@ -170,8 +169,7 @@
             if (dict)
             {
                 if (dict[@"userAction"])
-                    userAble.cmdType = [dict[@"userAction"] intValue];
-
+                userAble.cmdType = [dict[@"userAction"] intValue];
                 userAble.imUserId = dict[@"userId"];
                 userAble.imUserName = dict[@"nickName"];
                 userAble.imUserIconUrl = dict[@"headPic"];
@@ -190,7 +188,18 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (_roomIMListener) {
-                    [_roomIMListener onRecvGroupSender:userAble textMsg:msgText];
+                    NSRange range = [msgText rangeOfString:@"|"];
+                    //截取字符串
+                    NSString *msgContent = [msgText substringFromIndex:range.location+1];
+                    NSString *msgType = [msgText substringToIndex:range.location];
+                    //根据自己后台消息类型进行更改
+                    if ([msgType isEqualToString:@"danmu"]) {
+                        userAble.cmdType = AVIMCMD_Custom_Danmaku;
+                    }else if([msgType isEqualToString:@"gift"]){
+                        userAble.cmdType = AVIMCMD_Custom_gift;
+                    }
+
+                    [_roomIMListener onRecvGroupSender:userAble textMsg:msgContent];
                 }
             });
         }
@@ -206,10 +215,6 @@
 - (void)switchToLiveRoom:(NSString *)groupId
 {
     _groupId = groupId;
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *dic = [ud objectForKey:@"userInfo"];
-    NSLog(@"%@",[dic objectForKey:@"user_id"]);
-    _groupId = [dic objectForKey:@"user_id"];
     _chatRoomConversation = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:groupId];
 }
 

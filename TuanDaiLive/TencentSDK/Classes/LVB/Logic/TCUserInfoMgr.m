@@ -194,6 +194,7 @@ static TCUserInfoMgr *_shareInstance = nil;
  */
 - (void)setUserProfile:(TIMUserProfile *)profile;
 {
+    // 腾讯逻辑
     NSString *coverURL = [[NSString alloc] initWithData:profile.selfSignature encoding:NSUTF8StringEncoding];
     
     if ( 0 == profile.nickname.length)
@@ -204,11 +205,28 @@ static TCUserInfoMgr *_shareInstance = nil;
     {
         _userInfo.nickName   = profile.nickname;
     }
-    
     _userInfo.identifier = profile.identifier;
     _userInfo.faceURL    = profile.faceURL;
     _userInfo.gender     = profile.gender;
     _userInfo.coverURL   = coverURL;
+    
+    /*
+    //仅针对主播端 第一版新增
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userInfo = [ud objectForKey:@"userInfo"];
+    
+    _userInfo.nickName   = [NSString stringWithFormat:@"%@",[userInfo objectForKey:@"nickname"]];
+    _userInfo.identifier = [NSString stringWithFormat:@"%@",[userInfo objectForKey:@"user_id"]];
+    _userInfo.faceURL    = [NSString stringWithFormat:@"%@",[userInfo objectForKey:@"head"]];
+    if ([[userInfo objectForKey:@"sex"] intValue]==1) {//男
+        TIMGender gender = TIM_GENDER_MALE;
+        _userInfo.gender = gender;
+    }else if ([[userInfo objectForKey:@"sex"] intValue]==2){//女
+        TIMGender gender = TIM_GENDER_FEMALE;
+        _userInfo.gender = gender;
+    }
+    _userInfo.coverURL   = [NSString stringWithFormat:@"%@",[userInfo objectForKey:@"head"]];
+     */
     
     [self saveToLocal];
 }

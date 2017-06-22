@@ -804,15 +804,18 @@ NSString *const kTCLivePlayError = @"kTCLivePlayError";
     UMSocialMessageObject *messageObject = [UMSocialMessageObject messageObject];
     
     NSString *title = _liveInfo.title;
-
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *tencentSdkInfo = [ud objectForKey:TencentSdkInfo];
+    //kTCIMSDKAppId  [tencentSdkInfo objectForKey:@"sdkId"]
+    //kTCIMSDKAccountType  [tencentSdkInfo objectForKey:@"accountType"]
     NSString *url = [NSString stringWithFormat:@"%@?userid=%@&type=%@&fileid=%@&ts=%@&sdkappid=%@&acctype=%@",
                      kLivePlayShareAddr,
                      TC_PROTECT_STR([_liveInfo.userid stringByUrlEncoding]),
                      [NSString stringWithFormat:@"%d", _liveInfo.type],
                      TC_PROTECT_STR([_liveInfo.fileid stringByUrlEncoding]),
                      [NSString stringWithFormat:@"%d", _liveInfo.timestamp],
-                     kTCIMSDKAppId,
-                     kTCIMSDKAccountType];
+                     [tencentSdkInfo objectForKey:@"sdkId"],
+                     [tencentSdkInfo objectForKey:@"accountType"]];
     NSString *text = [NSString stringWithFormat:@"%@ 正在直播", _liveInfo.userinfo.nickname ? _liveInfo.userinfo.nickname : _liveInfo.userid];
 
     

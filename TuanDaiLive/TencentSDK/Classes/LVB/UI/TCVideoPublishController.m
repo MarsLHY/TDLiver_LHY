@@ -581,15 +581,18 @@
     NSString *text = [NSString stringWithFormat:@"%@ 的短视频", profile.nickName ? profile.nickName: profile.identifier];
     if ( [title length] == 0) title = text;
     
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *tencentSdkInfo = [ud objectForKey:TencentSdkInfo];
+    //kTCIMSDKAppId   [tencentSdkInfo objectForKey:@"sdkId"]
+    //kTCIMSDKAccountType  [tencentSdkInfo objectForKey:@"accountType"]
     NSString *url = [NSString stringWithFormat:@"%@?userid=%@&type=%@&fileid=%@&ts=%@&sdkappid=%@&acctype=%@",
                      kLivePlayShareAddr,
                      TC_PROTECT_STR([profile.identifier stringByUrlEncoding]),
                      [NSString stringWithFormat:@"%d", 2],
                      TC_PROTECT_STR([fileId stringByUrlEncoding]),
                      [NSString stringWithFormat:@"%d", 2],
-                     kTCIMSDKAppId,
-                     kTCIMSDKAccountType];
-    
+                     [tencentSdkInfo objectForKey:@"sdkId"],
+                     [tencentSdkInfo objectForKey:@"accountType"]];
     
     /* 以下分享类型，开发者可根据需求调用 */
     // 1、纯文本分享

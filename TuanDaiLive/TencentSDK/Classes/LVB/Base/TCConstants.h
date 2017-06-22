@@ -9,12 +9,15 @@
 #ifndef TCConstants_h
 #define TCConstants_h
 
-
 //小直播相关配置请参考:https://www.qcloud.com/document/product/454/7999
 //************在腾讯云开通各项服务后，将您的配置替换到如下的几个定义中************
 //腾讯云云通信服务AppId
-#define kTCIMSDKAppId                        @"1400029547"
-#define kTCIMSDKAccountType                  @"12284"
+#define kTCIMSDKAppId                        @""//1400030881
+#define kTCIMSDKAccountType                  @""//13374
+//团贷通过接口获取存在***NSUserDefaults***中，如下：
+//NSDictionary *tencentSdkInfo = [ud objectForKey:@"tencentSdkInfo"];
+//int sdkid = [[tencentSdkInfo objectForKey:@"sdkid"] intValue];
+//NSString *accounttype = [tencentSdkInfo objectForKey:@"accounttype"];
 
 //腾讯云对象和存储服务(COS)AppId
 #define kTCCOSAppId                          @""
@@ -33,7 +36,7 @@
 #define BUGLY_APP_ID                         @""
 
 //录屏需要用到此配置,请改成您的工程配置文件中的app groups的配置
-#define APP_GROUP                            @"group.com.lihaiyan.tdliver"
+#define APP_GROUP                            @""
 
 //直播分享页面的跳转地址，分享到微信、手Q后点击观看将会跳转到这个地址，请参考https://www.qcloud.com/document/product/454/8046 文档部署html5的代码后，替换成相应的页面地址
 #define kLivePlayShareAddr                   @""

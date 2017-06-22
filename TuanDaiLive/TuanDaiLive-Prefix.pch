@@ -24,6 +24,8 @@
 
 //接口
 #import "TDRequestMethod.h"
+//缓存名
+#import "TDNSUserDefault.h"
 
 //腾讯
 #import "ColorHeaders.h"

@@ -155,7 +155,7 @@
     
     _currentPos = self.durationMs * pos/self.rangeContent.imageListWidth;
     if (self.disableSeek == NO) {
-        NSLog(@"seek %f", _currentPos);
+//        NSLog(@"seek %f", _currentPos);
         [self.delegate onVideoRange:self seekToPos:self.currentPos];
     }
 }

@@ -91,6 +91,7 @@ extern BOOL g_bNeedEnterPushSettingView;
     [_dataTable setScrollEnabled:NO];
     [_dataTable setSeparatorColor:RGB(0xD8,0xD8,0xD8)];
     [self setExtraCellLineHidden:_dataTable];
+    _dataTable.userInteractionEnabled = NO;
     [self.view addSubview:_dataTable];
     
     //计算退出登录按钮的位置和显示
@@ -102,7 +103,6 @@ extern BOOL g_bNeedEnterPushSettingView;
     [button setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
     [button addTarget:self action:@selector(logout:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
-    
     // 设置通知消息,接受到通知后重绘cell,确保更改后的用户资料能同步到用户信息界面
     [[NSNotificationCenter defaultCenter] removeObserver:self name:KReloadUserInfoNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserInfoOnController:) name:KReloadUserInfoNotification object:nil];

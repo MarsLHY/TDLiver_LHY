@@ -28,6 +28,7 @@ static TCPusherMgr *_sharedInstance = nil;
 {
     if (self = [super init])
     {
+        
     }
     return self;
 }

@@ -57,9 +57,16 @@ static NSInteger           _index = 0;
      _arryColor = [[NSMutableArray alloc] initWithObjects:UIColorFromRGB(0x1fbcb6),UIColorFromRGB(0x2b7de2),UIColorFromRGB(0xff7906),nil];
 
     NSMutableAttributedString *attribute = [[NSMutableAttributedString alloc] init];
+    //获取当前时间
+    NSDate *date = [NSDate date];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:@"hh:mm:ss"];//YYYY-MM-dd
+    NSString *dateTime = [formatter stringFromDate:date];
     if (msgModel.msgType == TCMsgModelType_NormalMsg || msgModel.msgType == TCMsgModelType_DanmaMsg)
     {
-        NSMutableAttributedString *userName = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@  ", msgModel.userName]];
+        NSMutableAttributedString *userName = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@:  ",dateTime, msgModel.userName]];
         [attribute appendAttributedString:userName];
         
         NSMutableAttributedString *userMsg = [[NSMutableAttributedString alloc] initWithString:msgModel.userMsg];
@@ -74,7 +81,7 @@ static NSInteger           _index = 0;
     }
     else
     {
-        NSMutableAttributedString *msgShow = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"通知 %@%@", msgModel.userName, msgModel.userMsg]];
+        NSMutableAttributedString *msgShow = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@: %@",dateTime, msgModel.userName, msgModel.userMsg]];
         [attribute appendAttributedString:msgShow];
         [attribute addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:MSG_TABLEVIEW_LABEL_FONT] range:NSMakeRange(0, attribute.length)];
         [attribute addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:241/255.0 green:43/255.0 blue:91/255.0 alpha:1] range:NSMakeRange(0, msgShow.length)];

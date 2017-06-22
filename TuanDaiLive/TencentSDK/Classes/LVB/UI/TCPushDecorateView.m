@@ -98,6 +98,9 @@
     NSMutableArray *_filterArray;
     
     UITapGestureRecognizer *_tap;
+    
+    //第一版新增
+    UIView *_qualityBgView;
 }
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
@@ -170,7 +173,7 @@
         v.face = [UIImage imageNamed:@"greens_2"];
         v;
     })];
-
+    
     _filterArray = [NSMutableArray new];
     
     [_filterArray addObject:({
@@ -240,14 +243,14 @@
     _btnChat = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnChat.center = CGPointMake(first_icon_center_x, icon_center_y);
     _btnChat.bounds = CGRectMake(0, 0, icon_size, icon_size);
-    [_btnChat setImage:[UIImage imageNamed:@"message"] forState:UIControlStateNormal];
-    [_btnChat addTarget:self action:@selector(clickChat:) forControlEvents:UIControlEventTouchUpInside];
+    [_btnChat setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
+//    [_btnChat addTarget:self action:@selector(clickChat:) forControlEvents:UIControlEventTouchUpInside];
     _btnChat.hidden = YES;
     [self addSubview:_btnChat];
     
-    //开启闪关灯按钮
+    //开启闪关灯按钮   + icon_center_interval
     _btnTorch = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnTorch.center = CGPointMake(first_icon_center_x + icon_center_interval, icon_center_y);
+    _btnTorch.center = CGPointMake(first_icon_center_x, icon_center_y);
     _btnTorch.bounds = CGRectMake(0, 0, icon_size, icon_size);
     [_btnTorch setImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
     [_btnTorch addTarget:self action:@selector(clickTorch:) forControlEvents:UIControlEventTouchUpInside];
@@ -255,7 +258,7 @@
     
     //前置后置摄像头切换
     _btnCamera = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnCamera.center = CGPointMake(first_icon_center_x + icon_center_interval*2, icon_center_y);
+    _btnCamera.center = CGPointMake(first_icon_center_x + icon_center_interval*1, icon_center_y);
     _btnCamera.bounds = CGRectMake(0, 0, icon_size, icon_size);
     [_btnCamera setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
     [_btnCamera addTarget:self action:@selector(clickCamera:) forControlEvents:UIControlEventTouchUpInside];
@@ -263,23 +266,35 @@
     
     //美颜开关按钮
     _btnBeauty = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnBeauty.center = CGPointMake(first_icon_center_x + icon_center_interval*3, icon_center_y);
+    _btnBeauty.center = CGPointMake(first_icon_center_x + icon_center_interval*2, icon_center_y);
     _btnBeauty.bounds = CGRectMake(0, 0, icon_size, icon_size);
     [_btnBeauty setImage:[UIImage imageNamed:@"beauty"] forState:UIControlStateNormal];
     [_btnBeauty addTarget:self action:@selector(clickBeauty:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_btnBeauty];
     
+    //VideoQuality切换视频画质
+    _btnVideoQuality = [UIButton buttonWithType:UIButtonTypeCustom];
+    _btnVideoQuality.center = CGPointMake(first_icon_center_x + icon_center_interval*3, icon_center_y);
+    _btnVideoQuality.bounds = CGRectMake(0, 0, icon_size+10*TDAutoSizeScaleX, icon_size+10*TDAutoSizeScaleX);
+//    [_btnVideoQuality setImage:[UIImage imageNamed:@"log"] forState:UIControlStateNormal];
+    [_btnVideoQuality setTitle:@"高清" forState:UIControlStateNormal];
+    _btnVideoQuality.titleLabel.font = [UIFont systemFontOfSize:14*TDAutoSizeScaleX];
+    [_btnVideoQuality setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_btnVideoQuality addTarget:self action:@selector(clickQuality:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_btnVideoQuality];
+    
     //音乐按钮
     _btnMusic = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnMusic.center = CGPointMake(first_icon_center_x + icon_center_interval*4, icon_center_y);
+    _btnMusic.center = CGPointMake(first_icon_center_x + icon_center_interval*5, icon_center_y);
     _btnMusic.bounds = CGRectMake(0, 0, icon_size, icon_size);
-    [_btnMusic setImage:[UIImage imageNamed:@"music"] forState:UIControlStateNormal];
+    [_btnMusic setImage:[UIImage imageNamed:@"music_icon"] forState:UIControlStateNormal];
     [_btnMusic addTarget:self action:@selector(clickMusic:) forControlEvents:UIControlEventTouchUpInside];
+    _btnMusic.hidden = YES;
     [self addSubview:_btnMusic];
     
     //log显示或隐藏
     _btnLog = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnLog.center = CGPointMake(first_icon_center_x + icon_center_interval*5, icon_center_y);
+    _btnLog.center = CGPointMake(first_icon_center_x + icon_center_interval*6, icon_center_y);
     _btnLog.bounds = CGRectMake(0, 0, icon_size, icon_size);
     [_btnLog setImage:[UIImage imageNamed:@"log"] forState:UIControlStateNormal];
     [_btnLog addTarget:self action:@selector(clickLog:) forControlEvents:UIControlEventTouchUpInside];
@@ -853,7 +868,9 @@
 }
 
 -(void)bulletMsg:(TCMsgModel *)msgModel{
+    
     [_msgTableView bulletNewMsg:msgModel];
+    
     if (msgModel.msgType == TCMsgModelType_DanmaMsg) {
         if ([self getLocation:_bulletViewOne] >= [self getLocation:_bulletViewTwo]) {
             [_bulletViewTwo bulletNewMsg:msgModel];
@@ -864,6 +881,10 @@
     
     if (msgModel.msgType == TCMsgModelType_MemberEnterRoom || msgModel.msgType == TCMsgModelType_MemberQuitRoom) {
         [_audienceTableView refreshAudienceList:msgModel];
+    }
+    
+    if (msgModel.msgType == TCMsgModelType_gift) {//动画处理
+        NSLog(@"送礼物");
     }
 }
 
@@ -878,6 +899,7 @@
     btn.selected = _bulletBtnIsOn;
 }
 
+//底部栏的聊天button
 -(void)clickChat:(UIButton *)button{
     [_msgInputFeild becomeFirstResponder];
 }
@@ -885,7 +907,6 @@
 -(void)clickSend{
     [self textFieldShouldReturn:_msgInputFeild];
 }
-
 
 -(void)showLikeHeart{
     int x = (_btnLog.frame.origin.x + _closeBtn.frame.origin.x) / 2;
@@ -1124,6 +1145,52 @@
     if (self.delegate) [self.delegate clickMusic:button];
 }
 
+//第一版、新增画面质量切换
+- (void)clickQuality:(UIButton *)button{
+    if (!_qualityBgView) {
+        _qualityBgView = [[UIView alloc] initWithFrame:CGRectMake(button.left- 10*TDAutoSizeScaleX, button.top-button.height*3, button.width+20*TDAutoSizeScaleX, button.height*3)];
+        _qualityBgView.backgroundColor = UIColorFromRGB(0xA9A9A9);
+        _qualityBgView.hidden = YES;
+        _qualityBgView.alpha = 0.8;
+        [self addSubview:_qualityBgView];
+        //创建三种清晰度选择按钮
+        for (int i=0; i<=2; i++) {
+            UIButton *qualotiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, button.height*i, button.width+20*TDAutoSizeScaleX, button.height)];
+            qualotiBtn.tag = 100+i;
+            [qualotiBtn addTarget:self action:@selector(qualotiBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+            qualotiBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+            if (i==0) {
+                [qualotiBtn setTitle:@"超清画质" forState:UIControlStateNormal];
+            }else if(i==1){
+                [qualotiBtn setTitle:@"高清画质" forState:UIControlStateNormal];
+            }else{
+                [qualotiBtn setTitle:@"标清画质" forState:UIControlStateNormal];
+            }
+            [_qualityBgView addSubview:qualotiBtn];
+        }
+    }
+    button.selected = !button.selected;
+    if (button.selected) {
+        _qualityBgView.hidden = NO;
+    }else{
+        _qualityBgView.hidden = YES;
+    }
+}
+
+//选择画质按钮
+- (void)qualotiBtnAction:(UIButton *)button{
+    _qualityBgView.hidden = YES;
+    _btnVideoQuality.selected = NO;
+    if (self.delegate) [self.delegate clickQuality:button];
+    if (button.tag==100) {
+        [_btnVideoQuality setTitle:@"超清" forState:UIControlStateNormal];
+    }else if(button.tag==101){
+        [_btnVideoQuality setTitle:@"高清" forState:UIControlStateNormal];
+    }else{
+        [_btnVideoQuality setTitle:@"标清" forState:UIControlStateNormal];
+    }
+}
+
 - (void)clickMusicSelect:(UIButton *)button {
     if (self.delegate) [self.delegate clickMusicSelect:button];
 }
@@ -1207,9 +1274,7 @@
 }
 
 #pragma mark - AVIMMsgListener
-
 -(void)onRecvGroupSender:(IMUserAble *)info textMsg:(NSString *)msgText{
-    
     switch (info.cmdType) {
         case AVIMCMD_Custom_Text: {
             TCMsgModel *msgModel = [[TCMsgModel alloc] init];
@@ -1220,7 +1285,6 @@
             [self bulletMsg:msgModel];
             break;
         }
-            
         case AVIMCMD_Custom_EnterLive: {
             TCMsgModel *msgModel = [[TCMsgModel alloc] init];
             msgModel.userId = info.imUserId;
@@ -1238,7 +1302,7 @@
             
             break;
         }
-
+            
         case AVIMCMD_Custom_ExitLive: {
             TCMsgModel *msgModel = [[TCMsgModel alloc] init];
             msgModel.userId = info.imUserId;
@@ -1274,10 +1338,39 @@
             msgModel.msgType = TCMsgModelType_DanmaMsg;
             
             [self bulletMsg:msgModel];
-
+            
             break;
         }
+        
+        //新增礼物消息
+        case AVIMCMD_Custom_gift: {
+            TCMsgModel *msgModel = [[TCMsgModel alloc] init];
+            msgModel.userName = [info imUserName];
+            //msgModel.userMsg  =  msgText;
+            msgModel.userHeadImageUrl = info.imUserIconUrl;
+            msgModel.msgType = TCMsgModelType_gift;
             
+            //根据礼物数字进行变换  3-0-1 --->【礼物id】-【礼物类型】-【连送状态】
+            //格式 11:18:19 今晚打老虎：送出【爱心】1个 价值：5团票
+            NSArray *msgArr = [msgText componentsSeparatedByString:@"-"];
+            //获取存储的礼物列表
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            NSArray *giftListArr = [ud objectForKey:GiftListInfo];
+            for (NSDictionary *giftInfoDic in giftListArr) {
+                NSString *giftId = giftInfoDic[@"id"];
+                if ([msgArr[0] intValue]== [giftId intValue]) {
+                    NSString *giftName = giftInfoDic[@"present_name"];
+                    NSString *giftPrice = giftInfoDic[@"present_value"];
+                    NSString *msgContent = [NSString stringWithFormat:@"送出【%@】1个  价值:%@团票",giftName,giftPrice];
+                    //消息内容
+                    msgModel.userMsg = msgContent;
+                }
+            }
+            [self bulletMsg:msgModel];
+            
+            break;
+        }
+
         default:
             break;
     }
@@ -1293,6 +1386,7 @@
     _msgInputFeild.text = textField.text;
 }
 
+//发送消息
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     NSString *textMsg = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (textMsg.length <= 0) {
@@ -1309,12 +1403,17 @@
     
     if (_bulletBtnIsOn) {
         msgModel.msgType  = TCMsgModelType_DanmaMsg;
+        //按照自己后台消息格式替换
+        textMsg = [NSString stringWithFormat:@"danmu|%@",textMsg];
+        
         [_msgHandler sendDanmakuMessage:profile.identifier nickName:profile.nickName headPic:profile.faceURL msg:textMsg];
     }else{
         msgModel.msgType = TCMsgModelType_NormalMsg;
+        //按照自己后台消息格式替换
+        textMsg = [NSString stringWithFormat:@"common|%@",textMsg];
+        
         [_msgHandler sendTextMessage:profile.identifier nickName:profile.nickName headPic:profile.faceURL msg:textMsg];
     }
-
     
     [self bulletMsg:msgModel];
     [_msgInputFeild resignFirstResponder];

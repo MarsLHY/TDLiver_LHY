@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, AVIMCommand) {
     AVIMCMD_Custom_ExitLive      = 3, //用户推出直播
     AVIMCMD_Custom_Like          = 4, //点赞消息
     AVIMCMD_Custom_Danmaku       = 5, //弹幕消息
+    //新增礼物消息
+    AVIMCMD_Custom_gift          = 6, //礼物消息
 };
 
 

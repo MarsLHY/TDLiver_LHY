@@ -229,6 +229,7 @@
     {
         dic = TIM_GENDER_MALE;
     }
+    
     //先判断值是否发生改变
     TCUserInfoData  *_profile = [[TCUserInfoMgr sharedInstance] getUserProfile ];
     if (dic != _profile.gender)

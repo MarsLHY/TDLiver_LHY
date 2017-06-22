@@ -76,7 +76,7 @@ typedef enum : NSUInteger {
     [self addChildViewController:v3 imageName:@"User_normal" selectedImageName:@"User_click" title:nil];
     
     self.delegate = self; // this make tabBaController call
-    [self setSelectedIndex:0];
+    [self setSelectedIndex:2];
 }
 
 //添加推流按钮
@@ -88,7 +88,6 @@ typedef enum : NSUInteger {
     [bgBtn addTarget:self action:@selector(onLiveBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     bgBtn.frame = CGRectMake(self.tabBar.frame.size.width/2-80, 0, 160, 120);
     bgBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 35, 70, 35);
-
     
     self.liveBtn = ({
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -109,7 +108,6 @@ typedef enum : NSUInteger {
     childController.tabBarItem.image = [[UIImage imageNamed:normalImg] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     childController.tabBarItem.selectedImage = [[UIImage imageNamed:selectImg] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     childController.title = title;
-
     [self addChildViewController:nav];
 }
 
