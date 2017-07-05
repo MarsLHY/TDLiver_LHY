@@ -69,6 +69,9 @@
     
     AVIMMsgHandler *_msgHandler;
     
+    //第一版新增
+    int _value;
+    UILabel *_timeLabel;
 }
 
 - (instancetype)initWithPublishInfo:(TCLiveInfo *)liveInfo {
@@ -114,11 +117,13 @@
     _txLivePushonfig.pauseFps = 10;
     _txLivePushonfig.pauseTime = 300;
     _txLivePushonfig.pauseImg = [UIImage imageNamed:@"pause_publish.jpg"];
-    
     //耳返
     _txLivePushonfig.enableAudioPreview = YES;
+    //_txLivePushonfig.enableAEC = NO;
     
     _txLivePublisher = [[TXLivePush alloc] initWithConfig:_txLivePushonfig];
+    //设置默认清晰度
+    [_txLivePublisher setVideoQuality:VIDEO_QUALITY_HIGH_DEFINITION];
     
     // 创建群组
     TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
@@ -155,7 +160,6 @@
             [[TDNetworkManager sharedInstane] postRequestWithRequestModel:starPushModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
                 if (responeModel.code==1) {
                     _liveInfo.playurl = responeModel.responeData[@"push_url"];
-                    
                     TCPublishInfo *info = [[TCPublishInfo alloc] init];
                     info.liveInfo = _liveInfo;
                     info.msgHandler  =  _msgHandler;
@@ -179,8 +183,16 @@
                         });
                         
                     } else {
-                        [weakSelf startRtmp];
+                        _value = 4;
+                        if ([_txLivePublisher startPreview:_videoParentView]==0) {
+                            _isPreviewing = YES;
+                            //创建一个UIview遮罩
+                            [self ceatePreviewUI];
+                        }
                     }
+                }else{
+                    [SVProgressHUD showWithStatus:@"推流地址请求失败"];
+                    [SVProgressHUD dismissWithDelay:1];
                 }
             }];
         }
@@ -189,6 +201,40 @@
 #if POD_PITU
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(packageDownloadProgress:) name:kMC_NOTI_ONLINEMANAGER_PACKAGE_PROGRESS object:nil];
 #endif
+}
+
+//创建直播倒计时label
+- (void)ceatePreviewUI{
+    //倒计时label
+    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(Main_Screen_Width/2-80*TDAutoSizeScaleX, Main_Screen_Height/2-40*TDAutoSizeScaleX, 160*TDAutoSizeScaleX, 80*TDAutoSizeScaleX)];
+    _timeLabel.text = [NSString stringWithFormat:@"%d",_value];
+    _timeLabel.textAlignment = NSTextAlignmentCenter;
+    _timeLabel.font = [UIFont systemFontOfSize:100];
+    _timeLabel.textColor = UIColorFromRGB(0xF0F0F0);
+    [self.view addSubview:_timeLabel];
+    
+    if (_timeLabel) {
+        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerAction:) userInfo:nil repeats:YES];
+        [timer fire];
+    }
+}
+
+- (void)timerAction:(NSTimer *)timer{
+    _value--;
+    _timeLabel.text = [NSString stringWithFormat:@"%d",_value];
+    if (_value==0) {
+        //数秒之后
+        _timeLabel.font = [UIFont systemFontOfSize:30];
+        _timeLabel.text = @"开始直播啦.......";
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [_timeLabel removeFromSuperview];
+            _timeLabel = nil;
+            //推流开始
+            [self startRtmp];
+        });
+        [timer invalidate];
+        timer = nil;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -309,12 +355,11 @@
     if(_txLivePublisher != nil)
     {
         _txLivePublisher.delegate = self;
-        //设置默认清晰度
-        [self.txLivePublisher setVideoQuality:VIDEO_QUALITY_HIGH_DEFINITION];
         if (!_isPreviewing) {
             [_txLivePublisher startPreview:_videoParentView];
             _isPreviewing = YES;
         }
+        
         if ([_txLivePublisher startPush:_rtmpUrl] != 0) {
             NSLog(@"推流器启动失败");
             return NO;
@@ -447,10 +492,10 @@
 #pragma - TXLivePushListener
 -(void) appendLog:(NSString*) evt time:(NSDate*) date mills:(int)mil
 {
-    NSDateFormatter* format = [[NSDateFormatter alloc] init];
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
     format.dateFormat = @"hh:mm:ss";
-    NSString* time = [format stringFromDate:date];
-    NSString* log = [NSString stringWithFormat:@"[%@.%-3.3d] %@", time, mil, evt];
+    NSString *time = [format stringFromDate:date];
+    NSString *log = [NSString stringWithFormat:@"[%@.%-3.3d] %@", time, mil, evt];
     if (_logMsg == nil) {
         _logMsg = @"";
     }

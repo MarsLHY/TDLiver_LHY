@@ -11,10 +11,10 @@ typedef NS_ENUM(NSUInteger, TDRequstSourceType) {
     //团贷网请求渠道（直播）
     TDTuandaiSourceType,
     
-    //定期理财请求渠道
+    //
     TDRegularFinancialSourceType,
     
-    //业务运营
+    //
     TDOperationSourceType
 };
 

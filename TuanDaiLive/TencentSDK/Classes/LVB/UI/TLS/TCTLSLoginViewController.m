@@ -78,7 +78,7 @@
     _accountTextField.textColor = [UIColor colorWithWhite:1 alpha:1];
     _accountTextField.returnKeyType = UIReturnKeyDone;
     _accountTextField.delegate = self;
-
+    
     _pwdTextField = [[UITextField alloc] init];
     _pwdTextField.font = [UIFont systemFontOfSize:14];
     _pwdTextField.textColor = [UIColor colorWithWhite:1 alpha:1];
@@ -130,7 +130,6 @@
     [_touristBtn setTitle:@"游客登录" forState:UIControlStateNormal];
     [_touristBtn setImage:[UIImage imageNamed:@"tourist"] forState:UIControlStateNormal];
     [_touristBtn addTarget:self action:@selector(guestLogin:) forControlEvents:UIControlEventTouchUpInside];
-    
     [_touristView addSubview:_touristBtn];
     
     
@@ -197,7 +196,6 @@
     CGFloat intervalY = 3.0;
     _touristBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, titleSize.height + intervalY, -titleSize.width);
     _touristBtn.titleEdgeInsets = UIEdgeInsetsMake(imageSize.height + intervalY, -imageSize.width, 0, 0);
-    
     if (_isSMSLoginType) {
         [_accountTextField setPlaceholder:@"输入手机号码"];
         [_accountTextField setText:@""];
@@ -213,10 +211,10 @@
     }
     else {
         [_accountTextField setPlaceholder:@"输入用户名"];
-        [_accountTextField setText:@"100055"];
+        [_accountTextField setText:@""];
         _accountTextField.keyboardType = UIKeyboardTypeDefault;
         [_pwdTextField setPlaceholder:@"输入密码"];
-        [_pwdTextField setText:@"aaa123"];
+        [_pwdTextField setText:@""];
         [_switchBtn setTitle:@"手机号登录" forState:UIControlStateNormal];
         _pwdTextField.secureTextEntry = YES;
         _sendSMSBtn.hidden = YES;
@@ -278,91 +276,8 @@
             [HUDHelper alertTitle:@"密码错误" message:@"密码不能为空" cancel:@"确定"];
             return;
         }
-        //先执行团贷网的登录
-        //参数配置
-        TDRequestModel *loginModel = [[TDRequestModel alloc] init];
-        loginModel.methodName = push_login;
-        //获取时间戳
-        NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-        NSTimeInterval timer=[dat timeIntervalSince1970];
-        NSString*timeString = [NSString stringWithFormat:@"%0.f", timer];
-        //token
-        NSString *token = [NSString stringWithFormat:@"appid=%@&appkey=%@&timestamp=%@",TDAppid,TDAppkey,timeString];
-        token = [MD5And3DES md5:token];
-        //加密密码
-        NSString *passWord = [MD5And3DES doEncryptStr:_pwdTextField.text];
-        loginModel.param = @{@"appid":TDAppid,
-                               @"timestamp":timeString,
-                               @"token":token,
-                               @"user_id":_accountTextField.text,
-                               @"password":passWord};
-        loginModel.requestType = TDTuandaiSourceType;
-        //发送请求
-        __weak typeof(self) weakSelf = self;
-        [[TDNetworkManager sharedInstane] postRequestWithRequestModel:loginModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
-            if (responeModel.code == 1) {
-                //userinfoModel  单例管理 存储用户信息
-                TDUserInfoModel *userModel = [TDUserInfoModel mj_objectWithKeyValues:responeModel.responeData];
-                [[TDUserInfoMgr sharedInstance] cacheUserInfo:userModel];
-                // 用户名密码登录
-                //1、走团贷TLS登录 获取sig
-                //参数配置
-                TDRequestModel *requestModel = [[TDRequestModel alloc] init];
-                requestModel.methodName = push_getUserSig;
-                //获取时间戳
-                NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-                NSTimeInterval timer=[dat timeIntervalSince1970];
-                NSString*timeString = [NSString stringWithFormat:@"%0.f", timer];
-                //token
-                NSString *token = [NSString stringWithFormat:@"appid=%@&appkey=%@&timestamp=%@",TDAppid,TDAppkey,timeString];
-                token = [MD5And3DES md5:token];
-                
-                NSString *userid = [NSString stringWithFormat:@"%@",responeModel.responeData[@"user_id"]];
-                requestModel.param = @{@"appid":TDAppid,
-                                       @"timestamp":timeString,
-                                       @"token":token,
-                                       @"user_id":userid};
-                requestModel.requestType = TDTuandaiSourceType;
-                //发送请求
-                [[TDNetworkManager sharedInstane] postRequestWithRequestModel:requestModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
-                    if (responeModel.code==1) {
-                        //设置tls登录之后获取的用户信息
-                        TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
-                        TLSUserInfo *userInfo = [[TLSUserInfo alloc] init];
-                        userInfo.accountType = [responeModel.responeData[@"accountType"] intValue];
-                        userInfo.identifier = [NSString stringWithFormat:@"%@",userInfoModel.user_id];
-                        userInfo.userSig = responeModel.responeData[@"userSig"];
-                        userInfo.appidAt3rd = responeModel.responeData[@"sdkAppID"];
-                        userInfo.accountTypes = responeModel.responeData[@"accountType"];
-                        
-                        //设置腾讯sdkappid、accountType、sig
-                        NSString *accountType = [NSString stringWithFormat:@"%@",responeModel.responeData[@"accountType"]];
-                        NSString *sdkappid = [NSString stringWithFormat:@"%@",responeModel.responeData[@"sdkAppID"]];
-                        NSString *userSigStr = [NSString stringWithFormat:@"%@",responeModel.responeData[@"userSig"]];
-                        NSDictionary *tencentSdkInfo = @{@"sdkId":sdkappid,
-                                                   @"accountType":accountType,
-                                                       @"userSig":userSigStr
-                                                     };
-                        //缓存腾讯sdkappid、accountType、sig
-                        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-                        [ud setObject:tencentSdkInfo forKey:TencentSdkInfo];
-                        
-                        id listener = weakSelf.loginListener;
-                        
-                        // 手动 登录前需要先初始化IMSDK
-                        [[TCIMPlatform sharedInstance] initIMSDK];
-                        //登录
-                        [listener TLSUILoginOK:userInfo];
-                    }else{
-                        [SVProgressHUD showWithStatus:responeModel.message];
-                        [SVProgressHUD dismissWithDelay:1];
-                    }
-                }];
-            }else{
-                [SVProgressHUD showWithStatus:responeModel.message];
-                [SVProgressHUD dismissWithDelay:1];
-            }
-        }];
+        //第一版新增 走团贷登录
+        [self loginTD];
     }
         /*
         //2、走腾讯TLS登录
@@ -383,6 +298,97 @@
             [HUDHelper alertTitle:@"内部错误" message:[NSString stringWithFormat:@"%d", ret] cancel:@"确定"];
         }
          */
+}
+
+//走团贷网登录
+- (void)loginTD{
+    //先执行团贷网的登录
+    //参数配置
+    TDRequestModel *loginModel = [[TDRequestModel alloc] init];
+    loginModel.methodName = push_login;
+    //获取时间戳
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval timer = [dat timeIntervalSince1970];
+    NSString*timeString = [NSString stringWithFormat:@"%0.f", timer];
+    //token
+    NSString *token = [NSString
+                       stringWithFormat:@"appid=%@&appkey=%@&timestamp=%@",TDAppid,TDAppkey,timeString];
+    token = [MD5And3DES md5:token];
+    //加密密码
+    NSString *passWord = [MD5And3DES doEncryptStr:_pwdTextField.text];
+    loginModel.param = @{@"appid":TDAppid,
+                         @"timestamp":timeString,
+                         @"token":token,
+                         @"user_id":_accountTextField.text,
+                         @"password":passWord};
+    loginModel.requestType = TDTuandaiSourceType;
+    //发送请求
+    __weak typeof(self) weakSelf = self;
+    [[TDNetworkManager sharedInstane] postRequestWithRequestModel:loginModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
+        if (responeModel.code == 1) {
+            //userinfoModel  单例管理、存储用户信息
+            TDUserInfoModel *userModel = [TDUserInfoModel mj_objectWithKeyValues:responeModel.responeData];
+            [[TDUserInfoMgr sharedInstance] cacheUserInfo:userModel];
+            // 用户名密码登录
+            //1、走团贷TLS登录 获取sig
+            //参数配置
+            TDRequestModel *requestModel = [[TDRequestModel alloc] init];
+            requestModel.methodName = push_getUserSig;
+            //获取时间戳
+            NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+            NSTimeInterval timer=[dat timeIntervalSince1970];
+            NSString*timeString = [NSString stringWithFormat:@"%0.f", timer];
+            //token
+            NSString *token = [NSString stringWithFormat:@"appid=%@&appkey=%@&timestamp=%@",TDAppid,TDAppkey,timeString];
+            token = [MD5And3DES md5:token];
+            
+            NSString *userid = [NSString stringWithFormat:@"%@",responeModel.responeData[@"user_id"]];
+            requestModel.param = @{@"appid":TDAppid,
+                                   @"timestamp":timeString,
+                                   @"token":token,
+                                   @"user_id":userid};
+            requestModel.requestType = TDTuandaiSourceType;
+            //发送请求
+            [[TDNetworkManager sharedInstane] postRequestWithRequestModel:requestModel hubModel:nil modelClass:nil callBack:^(TDResponeModel *responeModel) {
+                if (responeModel.code==1) {
+                    //设置tls登录之后获取的用户信息
+                    TDUserInfoModel *userInfoModel = [[TDUserInfoMgr sharedInstance] loadCacheUserInfo];
+                    TLSUserInfo *userInfo = [[TLSUserInfo alloc] init];
+                    userInfo.accountType = [responeModel.responeData[@"accountType"] intValue];
+                    userInfo.identifier = [NSString stringWithFormat:@"%@",userInfoModel.user_id];
+                    userInfo.userSig = responeModel.responeData[@"userSig"];
+                    userInfo.appidAt3rd = responeModel.responeData[@"sdkAppID"];
+                    userInfo.accountTypes = responeModel.responeData[@"accountType"];
+                    
+                    //设置腾讯sdkappid、accountType、sig
+                    NSString *accountType = [NSString stringWithFormat:@"%@",responeModel.responeData[@"accountType"]];
+                    NSString *sdkappid = [NSString stringWithFormat:@"%@",responeModel.responeData[@"sdkAppID"]];
+                    NSString *userSigStr = [NSString stringWithFormat:@"%@",responeModel.responeData[@"userSig"]];
+                    NSDictionary *tencentSdkInfo = @{@"sdkId":sdkappid,
+                                                     @"accountType":accountType,
+                                                     @"userSig":userSigStr
+                                                     };
+                    //缓存腾讯sdkappid、accountType、sig
+                    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                    [ud setObject:tencentSdkInfo forKey:TencentSdkInfo];
+                    
+                    id listener = weakSelf.loginListener;
+                    
+                    // 手动 登录前需要先初始化IMSDK
+                    [[TCIMPlatform sharedInstance] initIMSDK];
+                    //登录
+                    [listener TLSUILoginOK:userInfo];
+                }else{
+                    [SVProgressHUD showWithStatus:responeModel.message];
+                    [SVProgressHUD dismissWithDelay:1];
+                }
+            }];
+        }else{
+            [SVProgressHUD showWithStatus:responeModel.message];
+            [SVProgressHUD dismissWithDelay:1];
+        }
+    }];
+
 }
 
 - (void)guestLogin:(UIButton *)button {

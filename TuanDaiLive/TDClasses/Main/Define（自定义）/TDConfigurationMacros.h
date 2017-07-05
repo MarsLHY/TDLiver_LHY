@@ -27,7 +27,7 @@
 
 
 //1:测试服务器  2:19服务器 3:beta服务器  4：线上服务器
-#define TDDomainType 1
+#define TDDomainType 4
 
 #if TDDomainType == 3
 //Beta版

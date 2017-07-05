@@ -18,7 +18,7 @@ static NSString *TDTestServer = @"http://10.103.8.188:1022/v1";
 #pragma mark - beta服务器域名
 
 #pragma mark - 正式服务器域名
-static NSString *TDOnlineServer = @"http://10.103.8.188:1022/v1";
+static NSString *TDOnlineServer = @"http://api.live.tuandai.com/v1";
 
 @implementation TDDomainManager
 

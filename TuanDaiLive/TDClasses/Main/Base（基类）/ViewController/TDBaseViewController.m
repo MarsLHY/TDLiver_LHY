@@ -1,18 +1,18 @@
 //
-//  TDBaseController.m
+//  TDBaseViewController.m
 //  TuanDaiLive
 //
-//  Created by TD on 2017/5/23.
+//  Created by TD on 2017/6/22.
 //  Copyright © 2017年 tuandai. All rights reserved.
 //
 
-#import "TDBaseController.h"
+#import "TDBaseViewController.h"
 
-@interface TDBaseController ()
+@interface TDBaseViewController ()
 
 @end
 
-@implementation TDBaseController
+@implementation TDBaseViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

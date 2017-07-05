@@ -2,15 +2,12 @@
 //  TDAnchorViewController.h
 //  TuanDaiLive
 //
-//  Created by TD on 2017/6/1.
+//  Created by TD on 2017/6/22.
 //  Copyright © 2017年 tuandai. All rights reserved.
 //
 
-#import "TDBaseController.h"
+#import "TDBaseViewController.h"
 
-@interface TDAnchorViewController : TDBaseController
-{
-
-}
+@interface TDAnchorViewController : TDBaseViewController
 
 @end
